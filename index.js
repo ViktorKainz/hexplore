@@ -32,19 +32,13 @@ io.on("connection", (socket) => {
     });
 });
 
+const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 function createRoomId() {
-    let result = [];
-    let characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    let charactersLength = characters.length;
+    let id = "";
     for (let i = 0; i < 6; i++) {
-        result.push(characters.charAt(Math.floor(Math.random() * charactersLength)));
+        id += characters.charAt(Math.floor(Math.random() * characters.length));
     }
-    let output = result.join("");
-    if (io.sockets.adapter.rooms[output]) {
-        return createRoomId();
-    } else {
-        return output;
-    }
+    return io.sockets.adapter.rooms[id] ? createRoomId() : id;
 }
 
 function joinRoom(socket, room) {
