@@ -1,8 +1,15 @@
-import {Test} from "./test.js";
+import {Socket} from "./socket.js";
 
-const socket = io();
+window.socket = new Socket();
 
-new Test();
+window.createRoom = function () {
+    socket.createRoom();
+}
 
+window.joinRoom = function (room) {
+    socket.joinRoom(room);
+}
 
-
+window.changeName = function (name) {
+    socket.changeName(name);
+}

@@ -3,12 +3,26 @@
 
 <head>
     <title>Hexplore</title>
-</head>
-
-<body>
     <link href="css/style.css"/>
     <script src="/socket.io/socket.io.min.js"></script>
     <script src="/js/main.js" type="module"></script>
+</head>
+
+<body>
+<h1 id="room"></h1>
+<form id="joinForm" action="">
+    <input id="join" type="text" pattern="[A-Z]{6}" placeholder="AAAAAA"/>
+    <button>Join Room</button>
+</form>
+
+<button id="create" onclick="createRoom();">Create Room</button>
+
+<form id="nameForm" action="">
+    <input id="name" type="text"/>
+    <button>Change Name</button>
+</form>
+
+<script src="/js/events.js"></script>
 </body>
 
 </html>
