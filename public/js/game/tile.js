@@ -20,5 +20,3 @@ export class Tile {
         }
     }
 }
-
-let t = new Tile(types.GRASS);
