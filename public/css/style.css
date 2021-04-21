@@ -1,0 +1,25 @@
+@font-face { font-family: SF Atarian System; src: url('fonts/SF Atarian System.ttf'); }
+@font-face { font-family: Plastic Bag; src: url('fonts/plastic bag.ttf'); }
+
+h1 {
+    font-family: Plastic Bag;
+    font-size: 4em;
+}
+
+#title {
+    text-align: center;
+}
+
+#hex {
+    color: #93ca55;
+}
+
+#canvas {
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    background-color: gray;
+}

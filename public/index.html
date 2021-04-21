@@ -4,24 +4,31 @@
 <head>
     <title>Hexplore</title>
     <link rel="icon" type="image/png" href="assets/Grass.png">
-    <link href="css/style.css"/>
+    <link rel="stylesheet" href="css/style.css"/>
     <script src="/socket.io/socket.io.min.js"></script>
     <script src="/js/main.js" type="module"></script>
 </head>
 
 <body>
-<h1 id="room"></h1>
-<form id="joinForm" action="">
-    <input id="join" type="text" pattern="[A-Z]{6}" placeholder="AAAAAA"/>
-    <button>Join Room</button>
-</form>
+<canvas id="canvas">
 
-<button id="create" onclick="createRoom();">Create Room</button>
+</canvas>
+<div id="overlay">
+    <h1 id="title">Hexpl<span id="hex">⬢</span>re</h1>
+    <h3 id="room"></h3>
+    <form id="joinForm" action="">
+        <input id="join" type="text" pattern="[A-Z]{6}" placeholder="AAAAAA"/>
+        <button>Join Room</button>
+    </form>
 
-<form id="nameForm" action="">
-    <input id="name" type="text"/>
-    <button>Change Name</button>
-</form>
+    <button id="create" onclick="createRoom();">Create Room</button>
+
+    <form id="nameForm" action="">
+        <input id="name" type="text"/>
+        <button>Change Name</button>
+    </form>
+</div>
+
 
 <script src="/js/events.js"></script>
 </body>
