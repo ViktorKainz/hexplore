@@ -10,9 +10,12 @@
 </head>
 
 <body>
-<canvas id="canvas">
 
+<canvas id="canvas">
 </canvas>
+<!-- Script nach Canvas da es sonst zuerst ausgeführt wird -->
+<script src="js/field.js" type="module"></script>
+
 <div id="overlay">
     <h1 id="title">Hexpl<span id="hex">⬢</span>re</h1>
     <h3 id="room"></h3>
