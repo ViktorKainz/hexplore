@@ -12,6 +12,7 @@ export class Socket {
             document.getElementById("room").innerText = room;
             console.log(room);
             this.user = [];
+            socket.getTile(0,0);
         });
 
         this.socket.on("room not found", () => {
@@ -27,6 +28,10 @@ export class Socket {
             console.log(this.user[id] + " disconnected");
             this.user.splice(id,1);
         })
+
+        this.socket.on("set tile", (x, y, tile) => {
+            console.log(tile);
+        });
     }
 
     createRoom() {
@@ -39,5 +44,9 @@ export class Socket {
 
     changeName(name) {
         this.socket.emit("set name", name);
+    }
+
+    getTile(x, y) {
+        this.socket.emit("get tile", x, y);
     }
 }
