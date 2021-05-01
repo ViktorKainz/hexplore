@@ -1,4 +1,4 @@
-export class Socket {
+export class SocketClient {
 
     constructor() {
         this.socket = io();
@@ -30,8 +30,12 @@ export class Socket {
         })
 
         this.socket.on("set tile", (x, y, tile) => {
-            console.log(tile);
+            gameClient.setTile(x, y, tile);
         });
+
+        this.socket.on("set board", (board) => {
+            gameClient.setBoard(board);
+        })
     }
 
     createRoom() {
@@ -48,5 +52,9 @@ export class Socket {
 
     getTile(x, y) {
         this.socket.emit("get tile", x, y);
+    }
+
+    getBoard() {
+        this.socket.emit("get board");
     }
 }

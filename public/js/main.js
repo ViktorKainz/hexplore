@@ -1,6 +1,8 @@
-import {Socket} from "./socket.js";
+import {SocketClient} from "./socket_client.js";
+import {GameClient} from "./game/game_client.js";
 
-window.socket = new Socket();
+window.socket = new SocketClient();
+window.gameClient = new GameClient();
 
 window.createRoom = function () {
     socket.createRoom();
