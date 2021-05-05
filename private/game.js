@@ -7,16 +7,7 @@ export class Game {
 
     constructor() {
         this.#board = new Board();
-        WorldGenerator.generateCircle(this.#board,0,0,1000);
-        let out = "";
-        for(let y = this.#board.getMinY(); y <= this.#board.getMaxY(); y++) {
-            for(let x = this.#board.getMinX(); x <= this.#board.getMaxX(); x++) {
-                let t = this.#board.getTile(x,y);
-                out += typeof t != "undefined" ? t.type.charAt(0) : "o";
-            }
-            out += "\n";
-        }
-        console.log(out);
+        WorldGenerator.generateCircle(this.#board,0,0,5);
     }
 
     getTile(x, y) {

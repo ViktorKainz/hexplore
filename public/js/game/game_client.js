@@ -4,8 +4,9 @@ import {DrawBoard} from "../draw_board.js";
 export class GameClient {
     #board;
 
-    constructor(socket) {
+    constructor() {
         this.#board = new Board();
+        window.socket.createRoom();
         window.addEventListener("load", (e) => {
             this.draw = new DrawBoard();
             this.drawBoard();
@@ -29,6 +30,7 @@ export class GameClient {
     }
 
     drawBoard() {
-        this.draw.drawHexes();
+        this.draw.drawAssets(this.#board);
+        console.log("Hi from drawBoard");
     }
 }

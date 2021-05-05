@@ -1,3 +1,5 @@
+import {Tile} from "./game/tile.js";
+
 export class DrawBoard {
 
     constructor() {
@@ -24,6 +26,8 @@ export class DrawBoard {
                     && (center.y > this.hexHeight / 2 && center.y < this.canvas.height - this.hexHeight / 2)) {
                     this.drawHex(center);
                     this.drawHexCoordinates(center, this.hex(q, r));
+                    let tile = new Tile("mountain");
+                    this.drawImageByCoords(this.hex(q,r), tile);
                 }
             }
         }
@@ -79,5 +83,23 @@ export class DrawBoard {
     //Koordinaten eines Hexagons
     hex(q, r) {
         return {q, r};
+    }
+
+    //
+    drawAssets(board){
+        console.log(board.map);
+        for(let x = board.getMinX(); x <= board.getMaxX(); x++){
+            for(let y = board.getMinY(); y <= board.getMaxY(); y++){
+                console.log("Hi from before tile");
+                let tile = board.getTile(x,y);
+                console.log("Hi from before undefinded");
+                if(typeof tile != "undefined"){
+                    let center = this.hex_to_pixel(this.hex(x,y));
+                    this.ctx.drawImage(tile.getAsset(), center.x - (this.hexWidth/2),center.y - (this.hexHeight/2), this.hexWidth, this.hexHeight);
+                    console.log("Hi from drawAssets");
+                }
+            }
+        }
+
     }
 }

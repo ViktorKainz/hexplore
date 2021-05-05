@@ -35,6 +35,7 @@ export class SocketClient {
 
         this.socket.on("set board", (board) => {
             gameClient.setBoard(board);
+            gameClient.drawBoard();
         })
     }
 
