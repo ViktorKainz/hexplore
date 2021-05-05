@@ -1,10 +1,15 @@
 import {Board} from "./board.js";
+import {DrawBoard} from "../draw_board.js";
 
 export class GameClient {
     #board;
 
     constructor(socket) {
         this.#board = new Board();
+        window.addEventListener("load", (e) => {
+            this.draw = new DrawBoard();
+            this.drawBoard();
+        });
     }
 
     getTile(x, y) {
@@ -21,5 +26,9 @@ export class GameClient {
 
     setBoard(board) {
         this.#board = board;
+    }
+
+    drawBoard() {
+        this.draw.drawHexes();
     }
 }

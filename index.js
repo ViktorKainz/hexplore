@@ -11,6 +11,3 @@ const server = app.listen(PORT, function () {
 app.use(express.static("public"));
 
 const socketServer = new SocketServer(server);
-
-
-
