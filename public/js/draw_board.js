@@ -5,7 +5,7 @@ export class DrawBoard {
     constructor() {
         this.canvas = document.querySelector('canvas');
         this.ctx = this.canvas.getContext('2d');
-        this.size = 17;
+        this.size = 10;
         this.hexOrigin = {x: this.canvas.width / 2, y: this.canvas.height / 2};
 
         this.hexHeight = this.size * 2;
@@ -13,31 +13,11 @@ export class DrawBoard {
         this.vertDist = this.hexHeight * 3 / 4;
     }
 
-    //Zeichnet Hexagons nebeneinander bzw. untereinander: r-> row, q->queue
-    drawHexes() {
-        let qLeftSide = Math.round(this.hexOrigin.x / this.hexWidth) * 4;
-        let qRightSide = Math.round((this.canvas.width - this.hexOrigin.x) / this.hexWidth) * 2;
-        let rTopSide = Math.round(this.hexOrigin.y / (this.hexHeight / 2));
-        let rBottomSide = Math.round((this.canvas.height - this.hexOrigin.y) / (this.hexHeight / 2));
-        for (let r = -rTopSide; r <= rBottomSide; r++) {
-            for (let q = -qLeftSide; q <= qRightSide; q++) {
-                let center = this.hex_to_pixel(this.hex(q, r));
-                if ((center.x > this.hexWidth / 2 && center.x < this.canvas.width - this.hexWidth / 2)
-                    && (center.y > this.hexHeight / 2 && center.y < this.canvas.height - this.hexHeight / 2)) {
-                    this.drawHex(center);
-                    this.drawHexCoordinates(center, this.hex(q, r));
-                    let tile = new Tile("mountain");
-                    this.drawImageByCoords(this.hex(q,r), tile);
-                }
-            }
-        }
-    }
-
     //Zeichnet ein einzelnes Hexagon
     drawHex(center) {
         let img = new Image();
         img.src = "assets/Grass.png"
-        this.ctx.drawImage(img, center.x - this.hexWidth/2, center.y - this.hexHeight/2, this.hexWidth, this.hexHeight);
+        this.ctx.drawImage(img, center.x - this.hexWidth / 2, center.y - this.hexHeight / 2, this.hexWidth, this.hexHeight);
         for (let i = 0; i <= 5; i++) {
             let start = this.hex_corner(center, i);
             let end = this.hex_corner(center, i + 1);
@@ -86,20 +66,26 @@ export class DrawBoard {
     }
 
     //
-    drawAssets(board){
-        console.log(board.map);
-        for(let x = board.getMinX(); x <= board.getMaxX(); x++){
-            for(let y = board.getMinY(); y <= board.getMaxY(); y++){
-                console.log("Hi from before tile");
-                let tile = board.getTile(x,y);
-                console.log("Hi from before undefinded");
-                if(typeof tile != "undefined"){
-                    let center = this.hex_to_pixel(this.hex(x,y));
-                    this.ctx.drawImage(tile.getAsset(), center.x - (this.hexWidth/2),center.y - (this.hexHeight/2), this.hexWidth, this.hexHeight);
-                    console.log("Hi from drawAssets");
+    drawAssets(board) {
+        for (let x = board.getMinX(); x <= board.getMaxX(); x++) {
+            for (let y = board.getMinY(); y <= board.getMaxY(); y++) {
+                let tile = board.getTile(x, y);
+                if (typeof tile != "undefined") {
+                    let center = this.hex_to_pixel(this.hex(x, y));
+                    if (typeof Tile.getBackground(tile) != "undefined") {
+                        let background = Tile.getBackground(tile);
+                        background.addEventListener("load", (e) => {
+                            this.ctx.drawImage(background, center.x - (this.hexWidth / 2), center.y - (this.hexHeight / 2), this.hexWidth, this.hexHeight);
+                        });
+                    }
+                    let img = Tile.getAsset(tile);
+                    img.addEventListener("load", (e) => {
+                        this.ctx.drawImage(img, center.x - (this.hexWidth / 2), center.y - (this.hexHeight / 2), this.hexWidth, this.hexHeight);
+                        this.drawHex(center);
+                    });
                 }
             }
-        }
 
+        }
     }
 }

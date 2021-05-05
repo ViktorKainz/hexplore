@@ -31,7 +31,7 @@ export class SocketServer {
                 socket.emit("set tile", x, y, this.#getGame(socket).getTile(x, y));
             });
             socket.on("get board", () => {
-                socket.emit("set board", this.#getGame(socket).getBoard());
+                socket.emit("set board", this.#getGame(socket).getBoard().map);
             });
         });
     }

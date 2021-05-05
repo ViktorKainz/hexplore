@@ -52,7 +52,7 @@ export class Board {
         return (this.map[DIRECTIONS.NORTH_EAST].length >
         this.map[DIRECTIONS.SOUTH_EAST].length ?
             this.map[DIRECTIONS.NORTH_EAST].length :
-            this.map[DIRECTIONS.SOUTH_EAST].length) - 1;
+            this.map[DIRECTIONS.SOUTH_EAST].length);
     }
 
     getMinX() {
@@ -74,7 +74,7 @@ export class Board {
                 max = this.map[DIRECTIONS.NORTH_WEST][i].length;
             }
         }
-        return max - 1;
+        return max;
     }
 
     getMinY() {

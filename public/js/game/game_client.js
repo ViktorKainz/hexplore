@@ -9,7 +9,7 @@ export class GameClient {
         window.socket.createRoom();
         window.addEventListener("load", (e) => {
             this.draw = new DrawBoard();
-            this.drawBoard();
+            window.socket.getBoard();
         });
     }
 
@@ -26,11 +26,12 @@ export class GameClient {
     }
 
     setBoard(board) {
-        this.#board = board;
+        this.#board.map = board;
+        console.log(board);
+        this.drawBoard();
     }
 
     drawBoard() {
         this.draw.drawAssets(this.#board);
-        console.log("Hi from drawBoard");
     }
 }
