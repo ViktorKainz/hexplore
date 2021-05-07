@@ -5,7 +5,7 @@ export class DrawBoard {
     constructor() {
         this.canvas = document.querySelector('canvas');
         this.ctx = this.canvas.getContext('2d');
-        this.size = 10;
+        this.size = 30;
         this.hexOrigin = {x: this.canvas.width / 2, y: this.canvas.height / 2};
 
         this.hexHeight = this.size * 2;
