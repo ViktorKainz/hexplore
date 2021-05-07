@@ -1,5 +1,6 @@
 import {Board} from "./board.js";
-import {DrawBoard} from "../draw_board.js";
+import {DrawBoard} from "../utility/draw_board.js";
+import {Assets} from "../utility/assets.js";
 
 export class GameClient {
     #board;
@@ -7,10 +8,12 @@ export class GameClient {
     constructor() {
         this.#board = new Board();
         window.socket.createRoom();
-        window.addEventListener("load", (e) => {
+        this.assets = new Assets();
+        this.assets.addEventListener("loaded", (e) => {
             this.draw = new DrawBoard();
             window.socket.getBoard();
         });
+        this.assets.load();
     }
 
     getTile(x, y) {
@@ -32,6 +35,6 @@ export class GameClient {
     }
 
     drawBoard() {
-        this.draw.drawAssets(this.#board);
+        this.draw.drawAssets(this.#board, this.assets);
     }
 }
