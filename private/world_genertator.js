@@ -15,6 +15,7 @@ export class WorldGenerator {
             for (let i in TILE_TYPES) {
                 tiles.push(TILE_TYPES[i]);
             }
+
             board.setTile(x, y, new Tile(tiles[Math.floor(Math.random() * tiles.length)]));
         }
     }
@@ -29,13 +30,11 @@ export class WorldGenerator {
     static generateRing(board, x, y, r) {
         let active = [x, y];
         for(let i = 0; i < r; i++) {
-            let index = Math.abs(active[1])%2;
-            active = [active[0]+NEIGHBOURS.RIGHT[index][0],active[1]+NEIGHBOURS.RIGHT[index][1]];
+            active = [active[0]+NEIGHBOURS.RIGHT[0],active[1]+NEIGHBOURS.RIGHT[1]];
         }
         for(let n in NEIGHBOURS) {
             for(let i = 0; i < r; i++) {
-                let index = Math.abs(active[1])%2;
-                active = [active[0]+NEIGHBOURS[n][index][0],active[1]+NEIGHBOURS[n][index][1]];
+                active = [active[0]+NEIGHBOURS[n][0],active[1]+NEIGHBOURS[n][1]];
                 this.generate(board,active[0],active[1]);
             }
         }

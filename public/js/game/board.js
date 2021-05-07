@@ -6,12 +6,12 @@ const DIRECTIONS = {
 }
 
 export const NEIGHBOURS = {
-    BOT_LEFT: [[0, +1], [-1, +1]],
-    LEFT: [[-1, 0], [-1, 0]],
-    TOP_LEFT: [[0, -1],[-1, -1]],
-    TOP_RIGHT: [[+1, -1], [0, -1]],
-    RIGHT: [[+1, 0],[+1, 0]],
-    BOT_RIGHT: [[+1, +1], [0, +1]],
+    BOT_LEFT: [-1, +1],
+    LEFT: [-1, 0],
+    TOP_LEFT: [0, -1],
+    TOP_RIGHT: [+1, -1],
+    RIGHT: [+1, 0],
+    BOT_RIGHT: [0, +1],
 }
 
 export class Board {
@@ -94,42 +94,10 @@ export class Board {
         return max * -1;
     }
 
-    getTopRight(x,y) {
-        let n = NEIGHBOURS.TOP_RIGHT[Math.abs(y)%2];
-        return this.getTile(x + n[0], y + n[1]);
-    }
-
-    getRight(x,y) {
-        let n = NEIGHBOURS.RIGHT[Math.abs(y)%2];
-        return this.getTile(x + n[0], y + n[1]);
-    }
-
-    getBotRight(x,y) {
-        let n = NEIGHBOURS.BOT_RIGHT[Math.abs(y)%2];
-        return this.getTile(x + n[0], y + n[1]);
-    }
-
-    getBotLeft(x,y) {
-        let n = NEIGHBOURS.BOT_LEFT[Math.abs(y)%2];
-        return this.getTile(x + n[0], y + n[1]);
-    }
-
-    getLeft(x,y) {
-        let n = NEIGHBOURS.LEFT[Math.abs(y)%2];
-        return this.getTile(x + n[0], y + n[1]);
-    }
-
-    getTopLeft(x,y) {
-        let n = NEIGHBOURS.TOP_LEFT[Math.abs(y)%2];
-        return this.getTile(x + n[0], y + n[1]);
-    }
-
     getNeighbours(x,y) {
         let results = [];
-        let index = [Math.abs(y)%2];
         for(let i in NEIGHBOURS) {
-            let n = NEIGHBOURS[i][index];
-            results.push(this.getTile(x + n[0], y + n[1]));
+            results.push(this.getTile(x + NEIGHBOURS[i][0], y + NEIGHBOURS[i][1]));
         }
         return results;
     }
