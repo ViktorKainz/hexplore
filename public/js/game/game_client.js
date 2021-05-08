@@ -37,4 +37,8 @@ export class GameClient {
     drawBoard() {
         this.draw.drawAssets(this.#board, this.assets);
     }
+
+    resize() {
+        this.draw.resize();
+    }
 }

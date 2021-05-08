@@ -1,6 +1,10 @@
 @font-face { font-family: SF Atarian System; src: url('fonts/SF Atarian System.ttf'); }
 @font-face { font-family: Plastic Bag; src: url('fonts/plastic bag.ttf'); }
 
+body {
+    background-color: gray;
+}
+
 h1 {
     font-family: Plastic Bag;
     font-size: 4em;

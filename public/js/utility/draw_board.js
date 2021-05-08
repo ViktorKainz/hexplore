@@ -6,6 +6,11 @@ export class DrawBoard {
         this.canvas = document.querySelector('canvas');
         this.ctx = this.canvas.getContext('2d');
         this.size = 30;
+
+        this.resize();
+    }
+
+    resize() {
         this.hexOrigin = {x: this.canvas.width / 2, y: this.canvas.height / 2};
 
         this.hexHeight = this.size * 2;
@@ -15,9 +20,6 @@ export class DrawBoard {
 
     //Zeichnet ein einzelnes Hexagon
     drawHex(center) {
-        let img = new Image();
-        img.src = "assets/Grass.png"
-        this.ctx.drawImage(img, center.x - this.hexWidth / 2, center.y - this.hexHeight / 2, this.hexWidth, this.hexHeight);
         for (let i = 0; i <= 5; i++) {
             let start = this.hex_corner(center, i);
             let end = this.hex_corner(center, i + 1);
@@ -65,7 +67,6 @@ export class DrawBoard {
         return {q, r};
     }
 
-    //
     drawAssets(board, assets) {
         for (let x = board.getMinX(); x <= board.getMaxX(); x++) {
             for (let y = board.getMinY(); y <= board.getMaxY(); y++) {
@@ -80,7 +81,6 @@ export class DrawBoard {
                     //this.drawHexCoordinates(center, this.hex(x, y))
                 }
             }
-
         }
     }
 }

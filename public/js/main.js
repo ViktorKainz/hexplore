@@ -5,6 +5,9 @@ function resize() {
     let c = document.getElementById("canvas");
     c.setAttribute("width", window.innerWidth + "px");
     c.setAttribute("height", window.innerHeight + "px");
+    if(typeof window.gameClient != "undefined") {
+        window.gameClient.resize();
+    }
 }
 resize();
 window.onresize = resize;
@@ -23,3 +26,10 @@ window.joinRoom = function (room) {
 window.changeName = function (name) {
     socket.changeName(name);
 }
+
+async function gameLoop() {
+    window.gameClient.drawBoard();
+    setTimeout(gameLoop, 100);
+}
+
+gameLoop();
