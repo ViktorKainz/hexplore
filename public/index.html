@@ -23,14 +23,14 @@
                 <td><input id="name" type="text" required/></td>
             </tr>
             <tr>
-                <td colspan="2"><input id="create" type="submit" onclick="clicked='create';document.getElementById('code').required = false;" value="Create Room"/></td>
+                <td colspan="2"><input id="create" type="submit" onclick="createButton()" value="Create Room"/></td>
             </tr>
             <tr>
                 <td><label for="code">Code:</label></td>
                 <td><input id="code" type="text" pattern="[A-Z]{6}" placeholder="AAAAAA"/></td>
             </tr>
             <tr>
-                <td colspan="2"><input id="join" type="submit" onclick="clicked='join';document.getElementById('code').required = true;" value="Join Room"/></td>
+                <td colspan="2"><input id="join" type="submit" onclick="joinButton()" value="Join Room"/></td>
             </tr>
         </table>
     </form>

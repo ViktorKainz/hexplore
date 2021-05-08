@@ -37,6 +37,10 @@ h1 {
     margin-right: 40vw;
 }
 
+#code {
+    text-transform: uppercase;
+}
+
 #join, #create {
     width: 100%;
 }
