@@ -41,4 +41,15 @@ export class GameClient {
     resize() {
         this.draw.resize();
     }
+
+    keyHandler(e) {
+        switch (e.key) {
+            case "w": window.gameClient.draw.yOffset+=5; break;
+            case "s": window.gameClient.draw.yOffset-=5; break;
+            case "a": window.gameClient.draw.xOffset+=5; break;
+            case "d": window.gameClient.draw.xOffset-=5; break;
+            case "c": window.gameClient.draw.yOffset=0;
+                      window.gameClient.draw.xOffset=0; break;
+        }
+    }
 }

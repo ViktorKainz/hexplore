@@ -6,6 +6,8 @@ export class DrawBoard {
         this.canvas = document.querySelector('canvas');
         this.ctx = this.canvas.getContext('2d');
         this.size = 30;
+        this.xOffset = 0;
+        this.yOffset = 0;
 
         this.resize();
     }
@@ -52,8 +54,8 @@ export class DrawBoard {
 
     //gibt den Mittelpunkt eines Hexagons zurück
     hex_to_pixel(hex) {
-        let x = this.size * (Math.sqrt(3) * hex.q + Math.sqrt(3) / 2 * hex.r) + this.hexOrigin.x;
-        let y = this.size * (3. / 2 * hex.r) + this.hexOrigin.y;
+        let x = this.xOffset + this.size * (Math.sqrt(3) * hex.q + Math.sqrt(3) / 2 * hex.r) + this.hexOrigin.x;
+        let y = this.yOffset + this.size * (3. / 2 * hex.r) + this.hexOrigin.y;
         return this.point(x, y);
     }
 
@@ -68,17 +70,20 @@ export class DrawBoard {
     }
 
     drawAssets(board, assets) {
+        this.ctx.clearRect(0,0,this.canvas.width, this.canvas.height);
         for (let x = board.getMinX(); x <= board.getMaxX(); x++) {
             for (let y = board.getMinY(); y <= board.getMaxY(); y++) {
                 let tile = board.getTile(x, y);
                 if (typeof tile != "undefined" && tile != null) {
                     let center = this.hex_to_pixel(this.hex(x, y));
-                    if (typeof Tile.getBackground(tile.type) != "undefined") {
-                        this.ctx.drawImage(assets.get(Tile.getBackground(tile.type)), center.x - (this.hexWidth / 2), center.y - (this.hexHeight / 2), this.hexWidth, this.hexHeight);
+                    if(center.x >= -this.size && center.y >= -this.size && center.x <= this.canvas.width + this.size && center.y <= this.canvas.height + this.size) {
+                        if (typeof Tile.getBackground(tile.type) != "undefined") {
+                            this.ctx.drawImage(assets.get(Tile.getBackground(tile.type)), center.x - (this.hexWidth / 2), center.y - (this.hexHeight / 2), this.hexWidth, this.hexHeight);
+                        }
+                        this.ctx.drawImage(assets.get(tile.type), center.x - (this.hexWidth / 2), center.y - (this.hexHeight / 2), this.hexWidth, this.hexHeight);
+                        this.drawHex(center);
+                        //this.drawHexCoordinates(center, this.hex(x, y))
                     }
-                    this.ctx.drawImage(assets.get(tile.type), center.x - (this.hexWidth / 2), center.y - (this.hexHeight / 2), this.hexWidth, this.hexHeight);
-                    this.drawHex(center);
-                    //this.drawHexCoordinates(center, this.hex(x, y))
                 }
             }
         }

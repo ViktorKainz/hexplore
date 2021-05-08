@@ -29,7 +29,9 @@ window.changeName = function (name) {
 
 async function gameLoop() {
     window.gameClient.drawBoard();
-    setTimeout(gameLoop, 100);
+    setTimeout(gameLoop, 10);
 }
 
 gameLoop();
+
+window.onkeypress = window.gameClient.keyHandler;
