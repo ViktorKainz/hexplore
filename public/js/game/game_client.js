@@ -7,11 +7,9 @@ export class GameClient {
 
     constructor() {
         this.#board = new Board();
-        window.socket.createRoom();
         this.assets = new Assets();
         this.assets.addEventListener("loaded", (e) => {
             this.draw = new DrawBoard();
-            window.socket.getBoard();
         });
         this.assets.load();
     }

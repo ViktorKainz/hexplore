@@ -1,24 +1,14 @@
-let joinForm = document.getElementById("joinForm");
-let join = document.getElementById("join");
+let form = document.getElementById("form");
 
-joinForm.addEventListener("submit", function(e) {
+form.addEventListener("submit", (e) => {
     e.preventDefault();
-    if(join.value != "" && joinForm.reportValidity()) {
-        joinRoom(join.value);
+    let name = document.getElementById("name").value;
+    let code = document.getElementById("code").value;
+    if(clicked == "create") {
+        window.socket.createRoom();
+    } else if(clicked == "join") {
+        console.log(code);
+        window.socket.joinRoom(code);
     }
-});
-
-let nameForm = document.getElementById("nameForm");
-let name = document.getElementById("name");
-
-nameForm.addEventListener("submit", function(e) {
-    e.preventDefault();
-    if(name.value != "" && nameForm.reportValidity()) {
-        changeName(name.value);
-    }
-});
-
-
-
-
-
+    window.socket.changeName(name);
+})

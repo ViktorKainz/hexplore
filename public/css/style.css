@@ -24,11 +24,33 @@ h1 {
     left: 0%;
     z-index: -1;
     background-color: gray;
+    display: none;
 }
 
 #overlay {
-    display: none;
+    display: block;
 }
-#images {
-    display: none;
+
+#form {
+    width: 20vw;
+    margin-left: 40vw;
+    margin-right: 40vw;
+}
+
+#join, #create {
+    width: 100%;
+}
+
+#form table {
+    width: 100%;
+}
+
+input {
+    width: 97%;
+}
+
+#room {
+    position: fixed;
+    left: 10px;
+    top: 0px;
 }

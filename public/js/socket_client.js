@@ -9,10 +9,11 @@ export class SocketClient {
         });
 
         this.socket.on("joined room", (room) => {
-            document.getElementById("room").innerText = room;
-            console.log(room);
             this.user = [];
-            socket.getTile(0,0);
+            document.getElementById("room").innerText = room;
+            document.getElementById("overlay").style.display = "none";
+            document.getElementById("canvas").style.display = "block";
+            this.getBoard();
         });
 
         this.socket.on("room not found", () => {

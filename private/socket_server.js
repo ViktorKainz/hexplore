@@ -54,15 +54,16 @@ export class SocketServer {
         socket.emit("joined room", room);
     }
 
-    #getRoom(socket) {
-        return this.#io.sockets.adapter.rooms.get(socket.room)
+    #getRoom(room) {
+        console.log(this.#io.sockets.adapter.rooms);
+        return this.#io.sockets.adapter.rooms.get(room)
     }
 
     #createGame(socket) {
-        this.#getRoom(socket).game = new Game();
+        this.#getRoom(socket.room).game = new Game();
     }
 
     #getGame(socket) {
-        return this.#getRoom(socket).game;
+        return this.#getRoom(socket.room).game;
     }
 }
