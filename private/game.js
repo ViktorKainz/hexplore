@@ -8,7 +8,7 @@ export class Game {
     #board;
     #buildings = [];
     #connections = [];
-    #player = [];
+    #player = {};
 
     constructor() {
         this.#board = new Board();

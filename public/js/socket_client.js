@@ -4,11 +4,10 @@ export class SocketClient {
         this.socket = io();
 
         this.socket.on("connect", () => {
-            console.log("connected")
+            console.log("connected");
         });
 
         this.socket.on("joined room", (room) => {
-            this.user = [];
             document.getElementById("room").innerText = room;
             document.getElementById("overlay").style.display = "none";
             document.getElementById("canvas").style.display = "block";
@@ -24,8 +23,7 @@ export class SocketClient {
         });
 
         this.socket.on("user disconnected", (id) => {
-            console.log(this.user[id] + " disconnected");
-            this.user.splice(id,1);
+            console.log(gameClient.getPlayer()[id]);
         })
 
         this.socket.on("set tile", (x, y, tile) => {

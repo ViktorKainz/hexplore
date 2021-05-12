@@ -72,7 +72,6 @@ export class SocketServer {
     }
 
     #getRoom(room) {
-        console.log(this.#io.sockets.adapter.rooms);
         return this.#io.sockets.adapter.rooms.get(room)
     }
 

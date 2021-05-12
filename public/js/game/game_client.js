@@ -47,6 +47,10 @@ export class GameClient {
         this.#player = player;
     }
 
+    getPlayer() {
+        return this.#player;
+    }
+
     drawBoard() {
         this.draw.drawAssets(this.#board, this.assets);
     }
