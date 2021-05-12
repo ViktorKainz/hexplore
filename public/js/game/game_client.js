@@ -4,6 +4,9 @@ import {Assets} from "../utility/assets.js";
 
 export class GameClient {
     #board;
+    #buildings = [];
+    #connections = [];
+    #player = [];
 
     constructor() {
         this.#board = new Board();
@@ -30,6 +33,18 @@ export class GameClient {
         this.#board.map = board;
         console.log(board);
         this.drawBoard();
+    }
+
+    setBuildings(buildings) {
+        this.#buildings = buildings;
+    }
+
+    setConnections(connections) {
+        this.#connections = connections;
+    }
+
+    setPlayer(player) {
+        this.#player = player;
     }
 
     drawBoard() {

@@ -22,9 +22,9 @@ export class Board {
 
     getTile(x, y) {
         return x >= 0 && y >= 0 ? typeof this.map[DIRECTIONS.NORTH_EAST][x] != "undefined" ? this.map[DIRECTIONS.NORTH_EAST][x][y] : undefined :
-               x >= 0 && y < 0 ? typeof this.map[DIRECTIONS.SOUTH_EAST][x] != "undefined" ? this.map[DIRECTIONS.SOUTH_EAST][x][y * (-1) - 1] : undefined :
-               x < 0 && y >= 0 ? typeof this.map[DIRECTIONS.NORTH_WEST][x * (-1) - 1] != "undefined" ? this.map[DIRECTIONS.NORTH_WEST][x * (-1) - 1][y] : undefined :
-                                 typeof this.map[DIRECTIONS.SOUTH_WEST][x * (-1) - 1] != "undefined" ? this.map[DIRECTIONS.SOUTH_WEST][x * (-1) - 1][y * (-1) - 1] : undefined;
+            x >= 0 && y < 0 ? typeof this.map[DIRECTIONS.SOUTH_EAST][x] != "undefined" ? this.map[DIRECTIONS.SOUTH_EAST][x][y * (-1) - 1] : undefined :
+                x < 0 && y >= 0 ? typeof this.map[DIRECTIONS.NORTH_WEST][x * (-1) - 1] != "undefined" ? this.map[DIRECTIONS.NORTH_WEST][x * (-1) - 1][y] : undefined :
+                    typeof this.map[DIRECTIONS.SOUTH_WEST][x * (-1) - 1] != "undefined" ? this.map[DIRECTIONS.SOUTH_WEST][x * (-1) - 1][y * (-1) - 1] : undefined;
     }
 
     setTile(x, y, tile) {
@@ -94,12 +94,16 @@ export class Board {
         return max * -1;
     }
 
-    getNeighbours(x,y) {
+    getNeighbours(x, y) {
         let results = [];
-        for(let i in NEIGHBOURS) {
+        for (let i in NEIGHBOURS) {
             results.push(this.getTile(x + NEIGHBOURS[i][0], y + NEIGHBOURS[i][1]));
         }
         return results;
+    }
+
+    static compareCoords(a, b) {
+        return a[0] - b[0] == 0 ? a[1] - b[1] : a[0] - b[0];
     }
 }
 

@@ -2,7 +2,6 @@ export class SocketClient {
 
     constructor() {
         this.socket = io();
-        this.user = [];
 
         this.socket.on("connect", () => {
             console.log("connected")
@@ -20,9 +19,8 @@ export class SocketClient {
             alert("Requested room does not exist.");
         });
 
-        this.socket.on("new name", (id, name) => {
-            this.user[id] = name;
-            console.log(this.user);
+        this.socket.on("new name", (names) => {
+            gameClient.setPlayer(names);
         });
 
         this.socket.on("user disconnected", (id) => {
@@ -36,7 +34,15 @@ export class SocketClient {
 
         this.socket.on("set board", (board) => {
             gameClient.setBoard(board);
-        })
+        });
+
+        this.socket.on("new building", (buildings) => {
+            gameClient.setBuildings(buildings);
+        });
+
+        this.socket.on("new connection", (connections) => {
+            gameClient.setConnections(connections)
+        });
     }
 
     createRoom() {
@@ -57,5 +63,13 @@ export class SocketClient {
 
     getBoard() {
         this.socket.emit("get board");
+    }
+
+    addBuilding(type, x1, y1, x2, y2, x3, y3) {
+        this.socket.emit("build building", type, x1, y1, x2, y2, x3, y3);
+    }
+
+    addConnection(type, x1, y1, x2, y2) {
+        this.socket.emit("build connection", type, x1, y1, x2, y2);
     }
 }
