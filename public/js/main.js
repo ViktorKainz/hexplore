@@ -1,4 +1,4 @@
-import {SocketClient} from "./socket_client.js";
+import {SocketClient} from "./utility/socket_client.js";
 import {GameClient} from "./game/game_client.js";
 
 function resize() {
@@ -16,18 +16,6 @@ window.onresize = resize;
 window.socket = new SocketClient();
 window.gameClient = new GameClient();
 window.onkeypress = window.gameClient.keyHandler;
-
-window.createRoom = function () {
-    socket.createRoom();
-}
-
-window.joinRoom = function (room) {
-    socket.joinRoom(room);
-}
-
-window.changeName = function (name) {
-    socket.changeName(name);
-}
 
 window.createButton = function () {
     window.clicked = 'create';

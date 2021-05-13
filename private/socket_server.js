@@ -10,7 +10,7 @@ export class SocketServer {
 
         this.#io.on("connection", (socket) => {
             socket.on("disconnecting", () => {
-                this.#io.to(socket.room).emit("user disconnected", socket.id);
+                this.#io.to(socket.room).emit("user disconnected", socket.user);
             });
 
             socket.on("create room", () => {
@@ -27,8 +27,17 @@ export class SocketServer {
             });
 
             socket.on("set name", (name) => {
-                this.#getGame(socket).addPlayer(socket.id, name);
+                this.#getGame(socket).addPlayer(socket.user, name);
                 this.#io.to(socket.room).emit("new name", this.#getGame(socket).getPlayer());
+            });
+
+            socket.on("ready", () => {
+                this.#getGame(socket).setReady(socket.user);
+                if(this.#getGame(socket).isReady()) {
+                    this.#io.to(socket.room).emit("start");
+                } else {
+                    this.#io.to(socket.room).emit("ready", this.#getGame(socket).getReady());
+                }
             });
 
             socket.on("get tile", (x, y) => {
@@ -40,15 +49,19 @@ export class SocketServer {
             });
 
             socket.on("build building", (type, x1, y1, x2, y2, x3, y3) => {
-                if(this.#getGame(socket).addBuilding(socket.id, type, x1, y1, x2, y2, x3, y3)) {
+                if(this.#getGame(socket).addBuilding(socket.user, type, x1, y1, x2, y2, x3, y3)) {
                     this.#io.to(socket.room).emit("new building", this.#getGame(socket).getBuildings());
                 }
             });
 
             socket.on("build connection", (type, x1, y1, x2, y2) => {
-                if(this.#getGame(socket).addConnection(socket.id, type, x1, y1, x2, y2)) {
+                if(this.#getGame(socket).addConnection(socket.user, type, x1, y1, x2, y2)) {
                     this.#io.to(socket.room).emit("new connection", this.#getGame(socket).getConnections());
                 }
+            });
+
+            socket.on("set user", (user) => {
+               socket.user = user;
             });
         });
     }

@@ -6,7 +6,8 @@ export class GameClient {
     #board;
     #buildings = [];
     #connections = [];
-    #player = [];
+    #player = {};
+    #ready = {};
 
     constructor() {
         this.#board = new Board();
@@ -15,6 +16,42 @@ export class GameClient {
             this.draw = new DrawBoard();
         });
         this.assets.load();
+    }
+
+    drawBoard() {
+        this.draw.drawAssets(this.#board, this.assets);
+    }
+
+    resize() {
+        this.draw.resize();
+    }
+
+    updateLobby() {
+        let table = document.getElementById("player");
+        table.innerHTML = "";
+        for(let p in this.#player) {
+            let tr = document.createElement("tr");
+            let name = document.createElement("td");
+            name.innerText = this.#player[p];
+            tr.appendChild(name);
+            let status = document.createElement("td");
+            status.innerText = this.#ready[p] ? "✓" : "✗";
+            status.setAttribute("class", this.#ready[p] ? "green" : "red");
+            tr.appendChild(status);
+            table.appendChild(tr);
+        }
+    }
+
+    keyHandler(e) {
+        let draw = window.gameClient.draw;
+        switch (e.key) {
+            case "w": draw.yOffset+=5; break;
+            case "s": draw.yOffset-=5; break;
+            case "a": draw.xOffset+=5; break;
+            case "d": draw.xOffset-=5; break;
+            case "c": draw.yOffset=0;
+                      draw.xOffset=0; break;
+        }
     }
 
     getTile(x, y) {
@@ -31,7 +68,6 @@ export class GameClient {
 
     setBoard(board) {
         this.#board.map = board;
-        console.log(board);
         this.drawBoard();
     }
 
@@ -51,22 +87,11 @@ export class GameClient {
         return this.#player;
     }
 
-    drawBoard() {
-        this.draw.drawAssets(this.#board, this.assets);
+    setReady(ready) {
+        this.#ready = ready;
     }
 
-    resize() {
-        this.draw.resize();
-    }
-
-    keyHandler(e) {
-        switch (e.key) {
-            case "w": window.gameClient.draw.yOffset+=5; break;
-            case "s": window.gameClient.draw.yOffset-=5; break;
-            case "a": window.gameClient.draw.xOffset+=5; break;
-            case "d": window.gameClient.draw.xOffset-=5; break;
-            case "c": window.gameClient.draw.yOffset=0;
-                      window.gameClient.draw.xOffset=0; break;
-        }
+    getReady() {
+        return this.#ready;
     }
 }

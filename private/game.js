@@ -9,9 +9,11 @@ export class Game {
     #buildings = [];
     #connections = [];
     #player = {};
+    #ready = {};
 
     constructor() {
         this.#board = new Board();
+        this.round = 1;
         WorldGenerator.generateCircle(this.#board, 0, 0, 5);
     }
 
@@ -27,7 +29,7 @@ export class Game {
     addBuilding(player, type, x1, y1, x2, y2, x3, y3) {
         let coords = [[x1, y1], [x2, y2], [x3, y3]].sort(Board.compareCoords);
         for (let b in this.#buildings) {
-            let c = b.getCoords();
+            let c = this.#buildings[b].coords;
             if(coords[0] == c[0] && coords[1] == c[1] && coords[2] == c[2]) {
                 return false;
             }
@@ -39,7 +41,7 @@ export class Game {
     addConnection(player, type, x1, y1, x2, y2) {
         let coords = [[x1, y1], [x2, y2]].sort(Board.compareCoords);
         for (let con in this.#connections) {
-            let c = con.getCoords();
+            let c = this.#connections[con].coords;
             if(coords[0] == c[0] && coords[1] == c[1] && coords[2] == c[2]) {
                 return false;
             }
@@ -50,6 +52,7 @@ export class Game {
 
     addPlayer(id, name) {
         this.#player[id] = name;
+        this.#ready[id] = false;
     }
 
     getBuildings() {
@@ -62,5 +65,22 @@ export class Game {
 
     getPlayer() {
         return this.#player;
+    }
+
+    setReady(id) {
+        this.#ready[id] = true;
+    }
+
+    getReady() {
+        return this.#ready;
+    }
+
+    isReady() {
+        for (let r in this.#ready) {
+            if(!this.#ready[r]) {
+                return false;
+            }
+        }
+        return true;
     }
 }

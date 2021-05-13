@@ -4,13 +4,12 @@ form.addEventListener("submit", (e) => {
     e.preventDefault();
     let name = document.getElementById("name").value;
     let code = document.getElementById("code").value;
-    if(window.clicked == "create") {
-        window.socket.createRoom();
-    } else if(window.clicked == "join") {
-        console.log(code);
-        window.socket.joinRoom(code);
+    if(clicked == "create") {
+        socket.createRoom();
+    } else if(clicked == "join") {
+        socket.joinRoom(code);
     }
-    window.socket.changeName(name);
+    socket.changeName(name);
     localStorage.setItem("name", name);
 })
 

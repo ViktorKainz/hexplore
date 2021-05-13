@@ -4,14 +4,17 @@ export class SocketClient {
         this.socket = io();
 
         this.socket.on("connect", () => {
-            console.log("connected");
+            if(localStorage.getItem("user") == null) {
+                localStorage.setItem("user", (Math.floor(Math.random() * Date.now()) + ""));
+            }
+            this.socket.user = localStorage.getItem("user");
+            this.setUser(this.socket.user);
         });
 
         this.socket.on("joined room", (room) => {
             document.getElementById("room").innerText = room;
-            document.getElementById("overlay").style.display = "none";
-            document.getElementById("canvas").style.display = "block";
-            this.getBoard();
+            document.getElementById("form").style.display = "none";
+            document.getElementById("lobby").style.display = "block";
         });
 
         this.socket.on("room not found", () => {
@@ -20,6 +23,7 @@ export class SocketClient {
 
         this.socket.on("new name", (names) => {
             gameClient.setPlayer(names);
+            gameClient.updateLobby();
         });
 
         this.socket.on("user disconnected", (id) => {
@@ -41,10 +45,26 @@ export class SocketClient {
         this.socket.on("new connection", (connections) => {
             gameClient.setConnections(connections)
         });
+
+        this.socket.on("ready", (ready) => {
+            gameClient.setReady(ready);
+            gameClient.updateLobby();
+            if(ready[this.socket.user]) {
+                document.getElementById("ready").style.display = "none";
+            }
+        });
+
+        this.socket.on("start", () => {
+            document.getElementById("overlay").style.display = "none";
+            document.getElementById("canvas").style.display = "block";
+            this.getBoard();
+        });
     }
 
     createRoom() {
         this.socket.emit("create room");
+        this.addBuilding("house", 0,0,1,0,0,1);
+        this.addBuilding("house", 0,0,1,0,0,1);
     }
 
     joinRoom(room) {
@@ -69,5 +89,13 @@ export class SocketClient {
 
     addConnection(type, x1, y1, x2, y2) {
         this.socket.emit("build connection", type, x1, y1, x2, y2);
+    }
+
+    setReady() {
+        this.socket.emit("ready");
+    }
+
+    setUser(user) {
+        this.socket.emit("set user", user);
     }
 }
