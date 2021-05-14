@@ -27,10 +27,10 @@ export class Game {
     }
 
     addBuilding(player, type, x1, y1, x2, y2, x3, y3) {
-        let coords = [[x1, y1], [x2, y2], [x3, y3]].sort(Board.compareCoords);
+        let coords = JSON.stringify([[x1, y1], [x2, y2], [x3, y3]].sort(Board.compareCoords));
         for (let b in this.#buildings) {
-            let c = this.#buildings[b].coords;
-            if(coords[0] == c[0] && coords[1] == c[1] && coords[2] == c[2]) {
+            let c = JSON.stringify(this.#buildings[b].coords);
+            if(c == coords) {
                 return false;
             }
         }
@@ -39,10 +39,10 @@ export class Game {
     }
 
     addConnection(player, type, x1, y1, x2, y2) {
-        let coords = [[x1, y1], [x2, y2]].sort(Board.compareCoords);
+        let coords = JSON.stringify([[x1, y1], [x2, y2]].sort(Board.compareCoords));
         for (let con in this.#connections) {
-            let c = this.#connections[con].coords;
-            if(coords[0] == c[0] && coords[1] == c[1] && coords[2] == c[2]) {
+            let c = JSON.stringify(this.#connections[con].coords);
+            if(c == coords) {
                 return false;
             }
         }

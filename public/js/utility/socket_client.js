@@ -63,8 +63,6 @@ export class SocketClient {
 
     createRoom() {
         this.socket.emit("create room");
-        this.addBuilding("house", 0,0,1,0,0,1);
-        this.addBuilding("house", 0,0,1,0,0,1);
     }
 
     joinRoom(room) {
