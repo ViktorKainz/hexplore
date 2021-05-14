@@ -35,6 +35,7 @@ export class SocketServer {
                 this.#getGame(socket).setReady(socket.user);
                 if(this.#getGame(socket).isReady()) {
                     this.#io.to(socket.room).emit("start");
+                    this.#io.to(socket.room).emit("next turn", this.#getGame(socket).getNextTurn());
                 } else {
                     this.#io.to(socket.room).emit("ready", this.#getGame(socket).getReady());
                 }
@@ -63,6 +64,11 @@ export class SocketServer {
             socket.on("set user", (user) => {
                socket.user = user;
             });
+
+            socket.on("next turn", () => {
+                this.#io.to(socket.room).emit("new resources", this.#getGame(socket).distributeResources());
+                this.#io.to(socket.room).emit("next turn", this.#getGame(socket).getNextTurn());
+            })
         });
     }
 
