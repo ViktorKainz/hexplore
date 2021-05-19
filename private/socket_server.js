@@ -9,6 +9,7 @@ export class SocketServer {
         this.#io = new Server(server);
 
         this.#io.on("connection", (socket) => {
+
             socket.on("disconnecting", () => {
                 this.#io.to(socket.room).emit("user disconnected", socket.user);
             });
@@ -36,6 +37,7 @@ export class SocketServer {
                 if(this.#getGame(socket).isReady()) {
                     this.#io.to(socket.room).emit("start");
                     this.#io.to(socket.room).emit("next turn", this.#getGame(socket).getNextTurn());
+                    this.#io.to(socket.room).emit("round", this.#getGame(socket).getRound());
                 } else {
                     this.#io.to(socket.room).emit("ready", this.#getGame(socket).getReady());
                 }

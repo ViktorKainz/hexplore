@@ -67,6 +67,12 @@ input {
     top: 0px;
 }
 
+#round {
+    position: fixed;
+    right: 10px;
+    top: 0px;
+}
+
 .green {
     color: lightgreen;
 }
