@@ -50,14 +50,24 @@ export class SocketServer {
             });
 
             socket.on("build building", (type, x1, y1, x2, y2, x3, y3) => {
-                if(this.#getGame(socket).addBuilding(socket.user, type, x1, y1, x2, y2, x3, y3)) {
-                    this.#io.to(socket.room).emit("new building", this.#getGame(socket).getBuildings());
+                switch (this.#getGame(socket).addBuilding(socket.user, type, x1, y1, x2, y2, x3, y3)) {
+                    case true:
+                        this.#io.to(socket.room).emit("new building", this.#getGame(socket).getBuildings());
+                        this.#io.to(socket.room).emit("new resources", this.#getGame(socket).getResources());
+                        break;
+                    case "blocked": socket.emit("building error", "locations is blocked");
+                    case "resources": socket.emit("building error", "not enough resources");
                 }
             });
 
             socket.on("build connection", (type, x1, y1, x2, y2) => {
-                if(this.#getGame(socket).addConnection(socket.user, type, x1, y1, x2, y2)) {
-                    this.#io.to(socket.room).emit("new connection", this.#getGame(socket).getConnections());
+                switch (this.#getGame(socket).addConnection(socket.user, type, x1, y1, x2, y2)) {
+                    case true:
+                        this.#io.to(socket.room).emit("new connection", this.#getGame(socket).getConnections());
+                        this.#io.to(socket.room).emit("new resources", this.#getGame(socket).getResources());
+                        break;
+                    case "blocked": socket.emit("building error", "locations is blocked");
+                    case "resources": socket.emit("building error", "not enough resources");
                 }
             });
 
@@ -68,6 +78,7 @@ export class SocketServer {
             socket.on("next turn", () => {
                 this.#io.to(socket.room).emit("new resources", this.#getGame(socket).distributeResources());
                 this.#io.to(socket.room).emit("next turn", this.#getGame(socket).getNextTurn());
+                this.#io.to(socket.room).emit("round", this.#getGame(socket).getRound());
             })
         });
     }
