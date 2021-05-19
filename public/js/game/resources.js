@@ -1,3 +1,6 @@
+/**
+ * Class that stores the resources of a player
+ */
 export class Resources {
 
     constructor(stone, wood, wool, crops) {

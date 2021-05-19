@@ -1,8 +1,17 @@
 import {Tile, TILE_TYPES} from "../public/js/game/tile.js";
 import {NEIGHBOURS} from "../public/js/game/board.js";
 
+/**
+ * Class that generates the tiles for the board
+ */
 export class WorldGenerator {
 
+    /**
+     * Generates a new tile on the specified coordinates if it is undefined
+     * @param {Board} board
+     * @param {int} x
+     * @param {int} y
+     */
     static generate(board, x, y) {
         if (typeof board.getTile(x, y) == "undefined") {
             let tiles = [];
@@ -20,6 +29,13 @@ export class WorldGenerator {
         }
     }
 
+    /**
+     * Generates a circle around the specified coordinates with the radius r
+     * @param {Board} board
+     * @param {int} x
+     * @param {int} y
+     * @param {int} r
+     */
     static generateCircle(board, x, y, r) {
         this.generate(board, x, y);
         for (let i = 1; i <= r; i++) {
@@ -27,6 +43,13 @@ export class WorldGenerator {
         }
     }
 
+    /**
+     * Generates a ring around the specified coordinates with the radius r
+     * @param {Board} board
+     * @param {int} x
+     * @param {int} y
+     * @param {int} r
+     */
     static generateRing(board, x, y, r) {
         let active = [x, y];
         for(let i = 0; i < r; i++) {

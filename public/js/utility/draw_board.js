@@ -160,7 +160,7 @@ export class DrawBoard {
 
                         this.hexcenters.push(center);
                         this.drawHex(center);
-                        this.drawHexCoordinates(center, this.hex(x, y));
+                        //this.drawHexCoordinates(center, this.hex(x, y));
                     }
                 }
             }

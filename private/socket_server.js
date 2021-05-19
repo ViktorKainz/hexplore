@@ -1,6 +1,9 @@
 import {Server} from "socket.io";
 import {Game} from "./game.js";
 
+/**
+ * Class that handles the communication with the clients
+ */
 export class SocketServer {
 
     #io;
@@ -8,17 +11,33 @@ export class SocketServer {
     constructor(server) {
         this.#io = new Server(server);
 
+        /**
+         * Handles the "connect" event.
+         * Initialises the socket.
+         */
         this.#io.on("connection", (socket) => {
 
+            /**
+             * Handles the "disconnecting" event.
+             * Notifies all members of the room.
+             */
             socket.on("disconnecting", () => {
                 this.#io.to(socket.room).emit("user disconnected", socket.user);
             });
 
+            /**
+             * Handles the "create room" event.
+             * Creates a room and lets the socket join it.
+             */
             socket.on("create room", () => {
                 this.#joinRoom(socket, this.#createRoomId());
                 this.#createGame(socket);
             });
 
+            /**
+             * Handles the "join room" event.
+             * Lets the socket join the specified room.
+             */
             socket.on("join room", (room) => {
                 if(typeof this.#getRoom(room) === "undefined") {
                     socket.emit("room not found");
@@ -27,11 +46,19 @@ export class SocketServer {
                 }
             });
 
+            /**
+             * Handles the "set name" event.
+             * Changes the name in the game instance and notifies all members of the room.
+             */
             socket.on("set name", (name) => {
                 this.#getGame(socket).addPlayer(socket.user, name);
                 this.#io.to(socket.room).emit("new name", this.#getGame(socket).getPlayer());
             });
 
+            /**
+             * Handles the "ready" event.
+             * Sets the state of the player to ready and starts the game if everybody is.
+             */
             socket.on("ready", () => {
                 this.#getGame(socket).setReady(socket.user);
                 if(this.#getGame(socket).isReady()) {
@@ -43,40 +70,64 @@ export class SocketServer {
                 }
             });
 
+            /**
+             * Handles the "get tile" event.
+             * Sends the client the requested tile.
+             */
             socket.on("get tile", (x, y) => {
                 socket.emit("set tile", x, y, this.#getGame(socket).getTile(x, y));
             });
 
+            /**
+             * Handles the "get board" event.
+             * Sends the client the board of the current game.
+             */
             socket.on("get board", () => {
                 socket.emit("set board", this.#getGame(socket).getBoard().map);
             });
 
+            /**
+             * Handles the "build building" event.
+             * Constructs a building and notifies all members of the room.
+             */
             socket.on("build building", (type, x1, y1, x2, y2, x3, y3) => {
                 switch (this.#getGame(socket).addBuilding(socket.user, type, x1, y1, x2, y2, x3, y3)) {
                     case true:
                         this.#io.to(socket.room).emit("new building", this.#getGame(socket).getBuildings());
                         this.#io.to(socket.room).emit("new resources", this.#getGame(socket).getResources());
                         break;
-                    case "blocked": socket.emit("building error", "locations is blocked");
+                    case "blocked": socket.emit("building error", "locations is blocked");break;
                     case "resources": socket.emit("building error", "not enough resources");
                 }
             });
 
+            /**
+             * Handles the "build connection" event.
+             * Constructs a connection and notifies all members of the room.
+             */
             socket.on("build connection", (type, x1, y1, x2, y2) => {
                 switch (this.#getGame(socket).addConnection(socket.user, type, x1, y1, x2, y2)) {
                     case true:
                         this.#io.to(socket.room).emit("new connection", this.#getGame(socket).getConnections());
                         this.#io.to(socket.room).emit("new resources", this.#getGame(socket).getResources());
                         break;
-                    case "blocked": socket.emit("building error", "locations is blocked");
+                    case "blocked": socket.emit("building error", "locations is blocked");break;
                     case "resources": socket.emit("building error", "not enough resources");
                 }
             });
 
+            /**
+             * Handles the "set user" event.
+             * Sets the user ID to the specified value.
+             */
             socket.on("set user", (user) => {
                socket.user = user;
             });
 
+            /**
+             * Handles the "set user" event.
+             * Distributes Resources to the player and starts the next turn.
+             */
             socket.on("next turn", () => {
                 this.#io.to(socket.room).emit("new resources", this.#getGame(socket).distributeResources());
                 this.#io.to(socket.room).emit("next turn", this.#getGame(socket).getNextTurn());
@@ -86,6 +137,11 @@ export class SocketServer {
     }
 
     #characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+    /**
+     * Returns a valid room id
+     * @returns {string} Room ID
+     */
     #createRoomId() {
         let id = "";
         for (let i = 0; i < 6; i++) {
@@ -94,6 +150,11 @@ export class SocketServer {
         return this.#getRoom(id) ? this.#createRoomId() : id;
     }
 
+    /**
+     * Lets the socket join the specified room
+     * @param {Socket} socket
+     * @param {string} room
+     */
     #joinRoom(socket, room) {
         socket.rooms.forEach(room => {
             socket.leave(room);
@@ -103,14 +164,28 @@ export class SocketServer {
         socket.emit("joined room", room);
     }
 
+    /**
+     * Returns the room with the specified id
+     * @param {string} room
+     * @returns {Set<string>|undefined} Room
+     */
     #getRoom(room) {
         return this.#io.sockets.adapter.rooms.get(room)
     }
 
+    /**
+     * Creates a new game instance for the current room
+     * @param {Socket} socket
+     */
     #createGame(socket) {
         this.#getRoom(socket.room).game = new Game();
     }
 
+    /**
+     * Returns the game instance of the current room
+     * @param {Socket} socket
+     * @returns {Game}
+     */
     #getGame(socket) {
         return this.#getRoom(socket.room).game;
     }

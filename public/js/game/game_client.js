@@ -2,6 +2,9 @@ import {Board} from "./board.js";
 import {DrawBoard} from "../utility/draw_board.js";
 import {Assets} from "../utility/assets.js";
 
+/**
+ * Class that handles the display of the game and the input of the player
+ */
 export class GameClient {
     #board;
     #buildings = [];
@@ -18,14 +21,23 @@ export class GameClient {
         this.assets.load();
     }
 
+    /**
+     * Draws the board on the canvas
+     */
     drawBoard() {
         this.draw.drawAssets(this.#board, this.assets);
     }
 
+    /**
+     * Signals the DrawBoard class that the window has been resized
+     */
     resize() {
         this.draw.resize();
     }
 
+    /**
+     * Regenerates the lobby screen
+     */
     updateLobby() {
         let table = document.getElementById("player");
         table.innerHTML = "";
@@ -42,7 +54,12 @@ export class GameClient {
         }
     }
 
+    /**
+     * Handles an onkeypress event
+     * @param {KeyboardEvent} e
+     */
     keyHandler(e) {
+        console.log(typeof e);
         let draw = window.gameClient.draw;
         switch (e.key) {
             case "w": draw.yOffset+=5; break;
@@ -54,6 +71,12 @@ export class GameClient {
         }
     }
 
+    /**
+     * Returns the Tile on the specified coordinates
+     * @param {int} x
+     * @param {int} y
+     * @returns {Tile|undefined}
+     */
     getTile(x, y) {
         if (typeof this.#board.getTile(x, y) == "undefined") {
             socket.getTile(x, y);
@@ -62,36 +85,62 @@ export class GameClient {
         return this.#board.getTile(x, y);
     }
 
+    /**
+     * Sets the Tile on the specified coordinates
+     * @param {int} x
+     * @param {int} y
+     * @param {Tile} tile
+     */
     setTile(x, y, tile) {
         this.#board.setTile(x, y, tile);
     }
 
+    /**
+     * Sets the board of the game
+     * @param {Board} board
+     */
     setBoard(board) {
         this.#board.map = board;
         this.drawBoard();
     }
 
+    /**
+     * Sets the constructed buildings
+     * @param {Building[]} buildings
+     */
     setBuildings(buildings) {
         this.#buildings = buildings;
     }
 
+    /**
+     * Sets the constructed connections
+     * @param {Connection[]} connections
+     */
     setConnections(connections) {
         this.#connections = connections;
     }
 
+    /**
+     * Sets the player ids and names
+     * @param {{}} player
+     */
     setPlayer(player) {
         this.#player = player;
     }
 
+    /**
+     * Returns an object with the ids and names of the player
+     * @returns {{}} Names of player
+     */
     getPlayer() {
         return this.#player;
     }
 
+    /**
+     * Sets the ready status of the player
+     * @param {{}} ready
+     */
     setReady(ready) {
         this.#ready = ready;
-    }
-
-    getReady() {
-        return this.#ready;
     }
 }
