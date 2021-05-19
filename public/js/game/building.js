@@ -1,8 +1,14 @@
 import {Board} from "./board.js";
+import {Resources} from "./resources.js";
 
 export const BUILDING_TYPES = {
     HOUSE: "house",
     CITY: "city"
+}
+
+export const BUILDING_COSTS = {
+    HOUSE: new Resources(1,1,1,1),
+    CITY: new Resources(3,0,0,2)
 }
 
 export class Building {

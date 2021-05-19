@@ -59,6 +59,10 @@ export class SocketClient {
             document.getElementById("canvas").style.display = "block";
             this.getBoard();
         });
+
+        this.socket.on("round", (round) => {
+            document.getElementById("round").innerText = round;
+        });
     }
 
     createRoom() {

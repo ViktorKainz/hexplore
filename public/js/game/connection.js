@@ -1,8 +1,14 @@
 import {Board} from "./board.js";
+import {Resources} from "./resources.js";
 
 export const CONNECTION_TYPES = {
     STREET: "street",
     SHIP: "ship"
+}
+
+export const CONNECTION_COSTS = {
+    STREET: new Resources(1,1,0,0),
+    SHIP: new Resources(0,1,1,0)
 }
 
 export class Connection {
