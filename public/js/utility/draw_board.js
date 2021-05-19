@@ -8,6 +8,15 @@ export class DrawBoard {
         this.size = 30;
         this.xOffset = 0;
         this.yOffset = 0;
+        this.hexcenters = [];
+
+        this.canvas.addEventListener("click", (e) => {
+            let draw = window.gameClient.draw;
+            // let hex = draw.pixelToHex(draw.point(e.x, e.y));
+            let mouse = draw.point(e.x, e.y);
+            let closestCenter = draw.findHex(mouse);
+
+        });
 
         this.resize();
     }
@@ -59,17 +68,84 @@ export class DrawBoard {
         return this.point(x, y);
     }
 
+    //vergleicht Mouseklick mit Hexagons
+    findHex(mouse){
+        let startXDiff = Math.abs(mouse.x - this.hexcenters[0].x);
+        let startYDiff = Math.abs(mouse.y - this.hexcenters[0].y);
+        let oldDistance = Math.sqrt(Math.pow(startXDiff,2) + Math.pow(startYDiff,2));
+        let closestCenter = this.hexcenters[0];
+        for (let i = 1; i < this.hexcenters.length; i++){
+                let diffx = Math.abs(mouse.x - this.hexcenters[i].x);
+                let diffy = Math.abs(mouse.y - this.hexcenters[i].y);
+                let newDistance = Math.sqrt(Math.pow(diffx,2) + Math.pow(diffy,2));
+                if(newDistance < oldDistance){
+                    oldDistance = newDistance;
+                    closestCenter = this.hexcenters[i];
+                }
+        }
+        return closestCenter;
+    }
+
+    pixelToHex(point){
+        console.log(point);
+        console.log(this.hexOrigin.x/this.size);
+        let q = (Math.sqrt(3)/3 * (point.x)  -  1./3 * (point.y)) / this.size;
+        let r = (2./3 * (point.y)) / this.size;
+        console.log(q + " || " + r);
+        return this.cubeToAxial(this.cubeRound(this.axialToCube(this.hex(q, r))));
+    }
+
+    cubeRound(cube) {
+        let x = Math.round(cube.x);
+        let y = Math.round(cube.y);
+        let z = Math.round(cube.z);
+
+        let  xdiff = Math.abs(x - cube.x);
+        let  ydiff = Math.abs(y - cube.y);
+        let  zdiff = Math.abs(z - cube.z);
+
+        if(xdiff > ydiff && xdiff > zdiff){
+            x = -y - z;
+        }
+        else if (ydiff > zdiff){
+            y = -x - z;
+        }
+        else {
+            z = -x - y;
+        }
+        return this.cube(x, y, z);
+    }
+
+    axialToCube(hex){
+        let x = hex.q;
+        let z = hex.r;
+        let y = -x-z;
+        return this.cube(x,y,z);
+    }
+
+    cubeToAxial(cube) {
+        console.log(this.hex(cube.x, cube.z));
+        return this.hex(cube.x, cube.z);
+    }
+
     //Koordinaten eines Punktes
     point(x, y) {
         return {x, y};
     }
 
-    //Koordinaten eines Hexagons
+    //Koordinaten eines Hexagons (row + queue)
     hex(q, r) {
         return {q, r};
     }
 
+    //Cube coordinates
+    cube(x, y, z){
+        return{x,y,z};
+    }
+
+    //Zeichnet Images auf das jeweilige Hexagon
     drawAssets(board, assets) {
+        this.hexcenters = [];
         this.ctx.clearRect(0,0,this.canvas.width, this.canvas.height);
         for (let x = board.getMinX(); x <= board.getMaxX(); x++) {
             for (let y = board.getMinY(); y <= board.getMaxY(); y++) {
@@ -81,8 +157,10 @@ export class DrawBoard {
                             this.ctx.drawImage(assets.get(Tile.getBackground(tile.type)), center.x - (this.hexWidth / 2), center.y - (this.hexHeight / 2), this.hexWidth, this.hexHeight);
                         }
                         this.ctx.drawImage(assets.get(tile.type), center.x - (this.hexWidth / 2), center.y - (this.hexHeight / 2), this.hexWidth, this.hexHeight);
+
+                        this.hexcenters.push(center);
                         this.drawHex(center);
-                        //this.drawHexCoordinates(center, this.hex(x, y))
+                        this.drawHexCoordinates(center, this.hex(x, y));
                     }
                 }
             }
