@@ -48,7 +48,7 @@ export class Game {
             let coords = this.#buildings[b].coords;
             let player = this.#buildings[b].player;
 
-            let r = new Resources(0, 0, 0);
+            let r = new Resources(0, 0, 0, 0);
             let amount = this.#buildings[b].type === BUILDING_TYPES.CITY ? 2 : 1;
 
             for (let c in coords) {
@@ -143,7 +143,7 @@ export class Game {
             default:
                 return false;
         }
-        if(!Game.checkCosts(r,costs))  return "resources";
+        if (!Game.checkCosts(r, costs)) return "resources";
         r.stone -= costs.stone;
         r.wood -= costs.wood;
         r.wool -= costs.wool;
@@ -183,7 +183,7 @@ export class Game {
             default:
                 return false;
         }
-        if(!Game.checkCosts(r,costs)) return "resources";
+        if (!Game.checkCosts(r, costs)) return "resources";
         r.stone -= costs.stone;
         r.wood -= costs.wood;
         r.wool -= costs.wool;
@@ -199,7 +199,54 @@ export class Game {
      * @returns {boolean}
      */
     static checkCosts(r, c) {
-        return r.stone - c.stone < 0 || r.wood - c.wood < 0 || r.wool - c.wool < 0 || r.crops - c.crops < 0;
+        return r.stone - c.stone >= 0 && r.wood - c.wood >= 0 && r.wool - c.wool >= 0 && r.crops - c.crops >= 0;
+    }
+
+    /**
+     * Exchanges 4 resources of a player into another
+     * @param {int} player
+     * @param {Resources} input
+     * @param {Resources} output
+     * @returns {boolean}
+     */
+    exchangeResources(player, input, output) {
+        if (!Game.checkCosts(this.#resources[player], input)) return false;
+        let inAmount = 0;
+        let outAmount = 0;
+        for (let value of Object.values(input)) {
+            inAmount += value;
+        }
+        for (let value of Object.values(output)) {
+            outAmount += value;
+        }
+        if (inAmount / 4 !== outAmount) return false;
+        this.removeResourcesFromPlayer(player, input);
+        this.addResourcesToPlayer(player, output);
+        return true;
+    }
+
+    /**
+     * Removes the specified resources from the player
+     * @param {int} player
+     * @param {Resources} resources
+     */
+    removeResourcesFromPlayer(player, resources) {
+        this.#resources[player].wood -= resources.wood;
+        this.#resources[player].wool -= resources.wool;
+        this.#resources[player].crops -= resources.crops;
+        this.#resources[player].stone -= resources.stone;
+    }
+
+    /**
+     * Adds the specified resources to the player
+     * @param {int} player
+     * @param {Resources} resources
+     */
+    addResourcesToPlayer(player, resources) {
+        this.#resources[player].wood += resources.wood;
+        this.#resources[player].wool += resources.wool;
+        this.#resources[player].crops += resources.crops;
+        this.#resources[player].stone += resources.stone;
     }
 
     /**
@@ -210,7 +257,7 @@ export class Game {
     addPlayer(id, name) {
         this.#player[id] = name;
         this.#ready[id] = false;
-        this.#resources[id] = new Resources(0, 0, 0);
+        this.#resources[id] = new Resources(0, 0, 0, 0);
     }
 
     /**

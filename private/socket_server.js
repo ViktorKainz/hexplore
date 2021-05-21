@@ -37,6 +37,7 @@ export class SocketServer {
             /**
              * Handles the "join room" event.
              * Lets the socket join the specified room.
+             * @param {string} room Room ID
              */
             socket.on("join room", (room) => {
                 if(typeof this.#getRoom(room) === "undefined") {
@@ -49,6 +50,7 @@ export class SocketServer {
             /**
              * Handles the "set name" event.
              * Changes the name in the game instance and notifies all members of the room.
+             * @param {string} name
              */
             socket.on("set name", (name) => {
                 this.#getGame(socket).addPlayer(socket.user, name);
@@ -73,6 +75,8 @@ export class SocketServer {
             /**
              * Handles the "get tile" event.
              * Sends the client the requested tile.
+             * @param {int} x
+             * @param {int} y
              */
             socket.on("get tile", (x, y) => {
                 socket.emit("set tile", x, y, this.#getGame(socket).getTile(x, y));
@@ -89,6 +93,13 @@ export class SocketServer {
             /**
              * Handles the "build building" event.
              * Constructs a building and notifies all members of the room.
+             * @param {string} type
+             * @param {int} x1
+             * @param {int} y1
+             * @param {int} x2
+             * @param {int} y2
+             * @param {int} x3
+             * @param {int} y3
              */
             socket.on("build building", (type, x1, y1, x2, y2, x3, y3) => {
                 switch (this.#getGame(socket).addBuilding(socket.user, type, x1, y1, x2, y2, x3, y3)) {
@@ -104,6 +115,11 @@ export class SocketServer {
             /**
              * Handles the "build connection" event.
              * Constructs a connection and notifies all members of the room.
+             * @param {string} type
+             * @param {int} x1
+             * @param {int} y1
+             * @param {int} x2
+             * @param {int} y2
              */
             socket.on("build connection", (type, x1, y1, x2, y2) => {
                 switch (this.#getGame(socket).addConnection(socket.user, type, x1, y1, x2, y2)) {
@@ -111,14 +127,15 @@ export class SocketServer {
                         this.#io.to(socket.room).emit("new connection", this.#getGame(socket).getConnections());
                         this.#io.to(socket.room).emit("new resources", this.#getGame(socket).getResources());
                         break;
-                    case "blocked": socket.emit("building error", "locations is blocked");break;
-                    case "resources": socket.emit("building error", "not enough resources");
+                    case "blocked": socket.emit("error", "locations is blocked");break;
+                    case "resources": socket.emit("error", "not enough resources");
                 }
             });
 
             /**
              * Handles the "set user" event.
              * Sets the user ID to the specified value.
+             * @param {int} user User ID
              */
             socket.on("set user", (user) => {
                socket.user = user;
@@ -132,6 +149,29 @@ export class SocketServer {
                 this.#io.to(socket.room).emit("new resources", this.#getGame(socket).distributeResources());
                 this.#io.to(socket.room).emit("next turn", this.#getGame(socket).getNextTurn());
                 this.#io.to(socket.room).emit("round", this.#getGame(socket).getRound());
+            });
+
+            /**
+             * Handles the "exchange resources" event.
+             * Exchanges 4 resources of a player into another
+             * @param {Object} input Resources
+             * @param {Object} output Resources
+             */
+            socket.on("exchange resources", (input, output) => {
+                if(this.#getGame(socket).exchangeResources(socket.user, input, output)) {
+                    this.#io.to(socket.room).emit("new resources", this.#getGame(socket).getResources());
+                } else {
+                    socket.emit("error", "invalid amount of resources");
+                }
+            });
+
+            /**
+             * Handles the "send message" event.
+             * Sends the specified message to all members of the room
+             * @param {string} message
+             */
+            socket.on("send message", (message) => {
+                this.#io.to(socket.room).emit("new message", socket.user, message);
             })
         });
     }
