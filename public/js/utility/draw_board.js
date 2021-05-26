@@ -1,4 +1,5 @@
 import {Tile} from "../game/tile.js";
+import {HexPosition} from "../game/hexposition.js";
 
 export class DrawBoard {
 
@@ -10,32 +11,16 @@ export class DrawBoard {
         this.yOffset = 0;
         this.hexcenters = [];
 
+
         this.canvas.addEventListener("click", (e) => {
             let draw = window.gameClient.draw;
             // let hex = draw.pixelToHex(draw.point(e.x, e.y));
             let mouse = draw.point(e.x, e.y);
-            let closestCenter = draw.findHex(mouse);
-            draw.drawredHex(closestCenter);
+            let closestCenter = draw.findCenter(mouse);
+
         });
 
         this.resize();
-    }
-
-    drawredHex(center) {
-        for (let i = 0; i <= 5; i++) {
-            let start = this.hex_corner(center, i);
-            let end = this.hex_corner(center, i + 1);
-            this.drawredLine({x: start.x, y: start.y}, {x: end.x, y: end.y});
-        }
-    }
-
-    drawredLine(start, end) {
-        this.ctx.beginPath();
-        this.ctx.moveTo(start.x, start.y);
-        this.ctx.lineTo(end.x, end.y);
-        this.ctx.strokeStyle = '#ff0000';
-        this.ctx.stroke();
-        this.ctx.closePath();
     }
 
     resize() {
@@ -60,6 +45,7 @@ export class DrawBoard {
         this.ctx.beginPath();
         this.ctx.moveTo(start.x, start.y);
         this.ctx.lineTo(end.x, end.y);
+        this.ctx.strokeStyle = '#000000';
         this.ctx.stroke();
         this.ctx.closePath();
     }
@@ -86,18 +72,18 @@ export class DrawBoard {
     }
 
     //vergleicht Mouseklick mit Hexagons
-    findHex(mouse){
-        let startXDiff = Math.abs(mouse.x - this.hexcenters[0].x);
-        let startYDiff = Math.abs(mouse.y - this.hexcenters[0].y);
+    findCenter(mouse){
+        let startXDiff = Math.abs(mouse.x - this.hexcenters[0].center.x);
+        let startYDiff = Math.abs(mouse.y - this.hexcenters[0].center.y);
         let oldDistance = Math.sqrt(Math.pow(startXDiff,2) + Math.pow(startYDiff,2));
-        let closestCenter = this.hexcenters[0];
+        let closestCenter = this.hexcenters[0].center;
         for (let i = 1; i < this.hexcenters.length; i++){
-                let diffx = Math.abs(mouse.x - this.hexcenters[i].x);
-                let diffy = Math.abs(mouse.y - this.hexcenters[i].y);
+                let diffx = Math.abs(mouse.x - this.hexcenters[i].center.x);
+                let diffy = Math.abs(mouse.y - this.hexcenters[i].center.y);
                 let newDistance = Math.sqrt(Math.pow(diffx,2) + Math.pow(diffy,2));
                 if(newDistance < oldDistance){
                     oldDistance = newDistance;
-                    closestCenter = this.hexcenters[i];
+                    closestCenter = this.hexcenters[i].center;
                 }
         }
         return closestCenter;
@@ -175,7 +161,7 @@ export class DrawBoard {
                         }
                         this.ctx.drawImage(assets.get(tile.type), center.x - (this.hexWidth / 2), center.y - (this.hexHeight / 2), this.hexWidth, this.hexHeight);
 
-                        this.hexcenters.push(center);
+                        this.hexcenters.push(new HexPosition(center,x,y));
                         this.drawHex(center);
                         //this.drawHexCoordinates(center, this.hex(x, y));
                     }
