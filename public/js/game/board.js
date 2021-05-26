@@ -1,3 +1,7 @@
+/**
+ * Constant that stores the cardinal points
+ * @type {{NORTH_WEST: int, NORTH_EAST: int, SOUTH_EAST: int, SOUTH_WEST: int}}
+ */
 const DIRECTIONS = {
     NORTH_EAST: 0,
     SOUTH_EAST: 1,
@@ -5,6 +9,10 @@ const DIRECTIONS = {
     NORTH_WEST: 3
 }
 
+/**
+ * Constant that stores the directions to get to the neighbours of a tile
+ * @type {{BOT_LEFT: int[], TOP_LEFT: int[], LEFT: int[], TOP_RIGHT: int[], RIGHT: int[], BOT_RIGHT: int[]}}
+ */
 export const NEIGHBOURS = {
     BOT_LEFT: [-1, +1],
     LEFT: [-1, 0],
@@ -14,12 +22,21 @@ export const NEIGHBOURS = {
     BOT_RIGHT: [0, +1],
 }
 
+/**
+ * Class that stores the locations of every tile
+ */
 export class Board {
 
     constructor() {
         this.map = [[], [], [], []];
     }
 
+    /**
+     * Returns the Tile on the specified coordinates
+     * @param {int} x
+     * @param {int} y
+     * @returns {Tile|undefined}
+     */
     getTile(x, y) {
         return x >= 0 && y >= 0 ? typeof this.map[DIRECTIONS.NORTH_EAST][x] != "undefined" ? this.map[DIRECTIONS.NORTH_EAST][x][y] : undefined :
             x >= 0 && y < 0 ? typeof this.map[DIRECTIONS.SOUTH_EAST][x] != "undefined" ? this.map[DIRECTIONS.SOUTH_EAST][x][y * (-1) - 1] : undefined :
@@ -27,6 +44,12 @@ export class Board {
                     typeof this.map[DIRECTIONS.SOUTH_WEST][x * (-1) - 1] != "undefined" ? this.map[DIRECTIONS.SOUTH_WEST][x * (-1) - 1][y * (-1) - 1] : undefined;
     }
 
+    /**
+     * Sets the Tile on the specified coordinates
+     * @param {int} x
+     * @param {int} y
+     * @param {Tile} tile
+     */
     setTile(x, y, tile) {
         let d;
         if (x >= 0 && y >= 0) {
@@ -48,6 +71,10 @@ export class Board {
         this.map[d][x][y] = tile;
     }
 
+    /**
+     * Returns the highest x coordinate
+     * @returns {int} maximal X
+     */
     getMaxX() {
         return (this.map[DIRECTIONS.NORTH_EAST].length >
         this.map[DIRECTIONS.SOUTH_EAST].length ?
@@ -55,6 +82,10 @@ export class Board {
             this.map[DIRECTIONS.SOUTH_EAST].length);
     }
 
+    /**
+     * Returns the lowest x coordinate
+     * @returns {int} minimal X
+     */
     getMinX() {
         return (this.map[DIRECTIONS.NORTH_WEST].length >
         this.map[DIRECTIONS.SOUTH_WEST].length ?
@@ -62,6 +93,10 @@ export class Board {
             this.map[DIRECTIONS.SOUTH_WEST].length) * -1;
     }
 
+    /**
+     * Returns the highest y coordinate
+     * @returns {int} maximal Y
+     */
     getMaxY() {
         let max = 0;
         for (let i = 0; i < this.map[DIRECTIONS.NORTH_EAST].length; i++) {
@@ -77,6 +112,10 @@ export class Board {
         return max;
     }
 
+    /**
+     * Returns the lowest y coordinate
+     * @returns {int} minimal Y
+     */
     getMinY() {
         let max = 0;
         for (let i = 0; i < this.map[DIRECTIONS.SOUTH_EAST].length; i++) {
@@ -94,6 +133,12 @@ export class Board {
         return max * -1;
     }
 
+    /**
+     * Returns an array of all tiles that are next to the specified coordinates
+     * @param {int} x
+     * @param {int} y
+     * @returns {Tile[]} Neighbours
+     */
     getNeighbours(x, y) {
         let results = [];
         for (let i in NEIGHBOURS) {
@@ -102,8 +147,14 @@ export class Board {
         return results;
     }
 
+    /**
+     * Compares two coordinates
+     * @param a
+     * @param b
+     * @returns {int}
+     */
     static compareCoords(a, b) {
-        return a[0] - b[0] == 0 ? a[1] - b[1] : a[0] - b[0];
+        return a[0] - b[0] === 0 ? a[1] - b[1] : a[0] - b[0];
     }
 }
 

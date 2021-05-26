@@ -5,6 +5,9 @@ import {Connection, CONNECTION_COSTS, CONNECTION_TYPES} from "../public/js/game/
 import {Resources} from "../public/js/game/resources.js";
 import {TILE_TYPES} from "../public/js/game/tile.js";
 
+/**
+ * Class that handles a running game session
+ */
 export class Game {
 
     #board;
@@ -23,21 +26,29 @@ export class Game {
         WorldGenerator.generateCircle(this.#board, 0, 0, 5);
     }
 
+    /**
+     * Starts next turn and returns the player whose turn it is
+     * @returns {int} Player ID
+     */
     getNextTurn() {
         this.#turn++;
         if (this.#turn === Object.keys(this.#player).length) {
             this.#round++;
             this.#turn = 0;
         }
-        return Object.keys(this.#player)[this.#turn];
+        return parseInt(Object.keys(this.#player)[this.#turn]);
     }
 
+    /**
+     * Distributes resources to the players and returns an object containing them
+     * @returns {{}} Resources of player
+     */
     distributeResources() {
         for (let b in this.#buildings) {
             let coords = this.#buildings[b].coords;
             let player = this.#buildings[b].player;
 
-            let r = new Resources(0, 0, 0);
+            let r = new Resources(0, 0, 0, 0);
             let amount = this.#buildings[b].type === BUILDING_TYPES.CITY ? 2 : 1;
 
             for (let c in coords) {
@@ -55,7 +66,6 @@ export class Game {
                         r.wool++;
                 }
             }
-
             this.#resources[player].wood += r.wood * amount;
             this.#resources[player].stone += r.stone * amount;
             this.#resources[player].wool += r.wool * amount;
@@ -64,28 +74,60 @@ export class Game {
         return this.#resources;
     }
 
+    /**
+     * Returns an object containing the player ids and resources
+     * @returns {{}} Resources of player
+     */
     getResources() {
         return this.#resources;
     }
 
+    /**
+     * Returns the current round
+     * @returns {int} Round
+     */
     getRound() {
         return this.#round;
     }
 
+    /**
+     * Returns the Tile on the specified coordinates.
+     * If it does not exist a new one is generated.
+     * @param {int} x
+     * @param {int} y
+     * @returns {Tile}
+     */
     getTile(x, y) {
         WorldGenerator.generate(this.#board, x, y);
         return this.#board.getTile(x, y);
     }
 
+    /**
+     * Returns the board of the current game
+     * @returns {Board}
+     */
     getBoard() {
         return this.#board;
     }
 
+    /**
+     * Adds the specified building on the specified coordinates.
+     * If it is successful it returns true else it returns false or an error code.
+     * @param {int} player
+     * @param {string} type
+     * @param {int} x1
+     * @param {int} y1
+     * @param {int} x2
+     * @param {int} y2
+     * @param {int} x3
+     * @param {int} y3
+     * @returns {string|boolean}
+     */
     addBuilding(player, type, x1, y1, x2, y2, x3, y3) {
         let coords = JSON.stringify([[x1, y1], [x2, y2], [x3, y3]].sort(Board.compareCoords));
         for (let b in this.#buildings) {
             let c = JSON.stringify(this.#buildings[b].coords);
-            if (c == coords) {
+            if (c === coords) {
                 return "blocked";
             }
         }
@@ -101,7 +143,7 @@ export class Game {
             default:
                 return false;
         }
-        if(!this.#checkCosts(r,costs))  return "resources";
+        if (!Game.checkCosts(r, costs)) return "resources";
         r.stone -= costs.stone;
         r.wood -= costs.wood;
         r.wool -= costs.wool;
@@ -110,11 +152,22 @@ export class Game {
         return true;
     }
 
+    /**
+     * Adds the specified connection on the specified coordinates.
+     * If it is successful it returns true else it returns false or an error code.
+     * @param {int} player
+     * @param {string} type
+     * @param {int} x1
+     * @param {int} y1
+     * @param {int} x2
+     * @param {int} y2
+     * @returns {string|boolean}
+     */
     addConnection(player, type, x1, y1, x2, y2) {
         let coords = JSON.stringify([[x1, y1], [x2, y2]].sort(Board.compareCoords));
         for (let con in this.#connections) {
             let c = JSON.stringify(this.#connections[con].coords);
-            if (c == coords) {
+            if (c === coords) {
                 return "blocked";
             }
         }
@@ -130,7 +183,7 @@ export class Game {
             default:
                 return false;
         }
-        if(!this.#checkCosts(r,costs)) return "resources";
+        if (!Game.checkCosts(r, costs)) return "resources";
         r.stone -= costs.stone;
         r.wood -= costs.wood;
         r.wool -= costs.wool;
@@ -139,36 +192,118 @@ export class Game {
         return true;
     }
 
-    #checkCosts(r, costs) {
-        return r.stone - costs.stone < 0 || r.wood - costs.wood < 0 || r.wool - costs.wool < 0 || r.crops - costs.crops < 0;
+    /**
+     * Checks if there are enough resources
+     * @param {Resources} r Resources
+     * @param {Resources} c Costs
+     * @returns {boolean}
+     */
+    static checkCosts(r, c) {
+        return r.stone - c.stone >= 0 && r.wood - c.wood >= 0 && r.wool - c.wool >= 0 && r.crops - c.crops >= 0;
     }
 
+    /**
+     * Exchanges 4 resources of a player into another
+     * @param {int} player
+     * @param {Resources} input
+     * @param {Resources} output
+     * @returns {boolean}
+     */
+    exchangeResources(player, input, output) {
+        if (!Game.checkCosts(this.#resources[player], input)) return false;
+        let inAmount = 0;
+        let outAmount = 0;
+        for (let value of Object.values(input)) {
+            inAmount += value;
+        }
+        for (let value of Object.values(output)) {
+            outAmount += value;
+        }
+        if (inAmount / 4 !== outAmount) return false;
+        this.removeResourcesFromPlayer(player, input);
+        this.addResourcesToPlayer(player, output);
+        return true;
+    }
+
+    /**
+     * Removes the specified resources from the player
+     * @param {int} player
+     * @param {Resources} resources
+     */
+    removeResourcesFromPlayer(player, resources) {
+        this.#resources[player].wood -= resources.wood;
+        this.#resources[player].wool -= resources.wool;
+        this.#resources[player].crops -= resources.crops;
+        this.#resources[player].stone -= resources.stone;
+    }
+
+    /**
+     * Adds the specified resources to the player
+     * @param {int} player
+     * @param {Resources} resources
+     */
+    addResourcesToPlayer(player, resources) {
+        this.#resources[player].wood += resources.wood;
+        this.#resources[player].wool += resources.wool;
+        this.#resources[player].crops += resources.crops;
+        this.#resources[player].stone += resources.stone;
+    }
+
+    /**
+     * Registers a player in the current game
+     * @param {int} id
+     * @param {string} name
+     */
     addPlayer(id, name) {
         this.#player[id] = name;
         this.#ready[id] = false;
-        this.#resources[id] = new Resources(0, 0, 0);
+        this.#resources[id] = new Resources(0, 0, 0, 0);
     }
 
+    /**
+     * Returns an array with the constructed buildings
+     * @returns {Building[]}
+     */
     getBuildings() {
         return this.#buildings;
     }
 
+    /**
+     * Returns an array with the constructed connections
+     * @returns {Connection[]}
+     */
     getConnections() {
         return this.#connections;
     }
 
+    /**
+     * Returns the registered players in the current game
+     * @returns {{}} Names of player
+     */
     getPlayer() {
         return this.#player;
     }
 
+    /**
+     * Sets the status of the player with the specified id to ready
+     * @param {int} id
+     */
     setReady(id) {
         this.#ready[id] = true;
     }
 
+    /**
+     * Returns the ready status of all player
+     * @returns {{}} Status of player
+     */
     getReady() {
         return this.#ready;
     }
 
+    /**
+     * Returns true if all registered players are ready
+     * @returns {boolean}
+     */
     isReady() {
         for (let r in this.#ready) {
             if (!this.#ready[r]) {
