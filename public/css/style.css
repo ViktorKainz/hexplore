@@ -80,3 +80,64 @@ input {
 .red {
     color: red;
 }
+
+#error {
+    position: fixed;
+    right: 1%;
+    top: 5%;
+    border-collapse: separate;
+    border-spacing: 0px;
+}
+
+#error tr td{
+    background-color: red;
+    padding: 10px;
+}
+
+#error tr {
+    margin-bottom: 10px;
+}
+
+#error tr td:first-child {
+    border-left: solid red;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    margin-bottom: 10px;
+}
+
+#error tr td:last-child {
+    border-right: solid red;
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.spacer {
+    height: 7px;
+}
+
+#error tr{
+    opacity: 0;
+    animation-name: fadeIn;
+    animation-duration: 1s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+}
+
+#error tr.remove {
+    opacity: 1;
+    animation-name: fadeOut;
+    animation-duration: 1s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+}
+
+@keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+@keyframes fadeOut {
+    from {opacity: 1;}
+    to {opacity: 0;}
+}
+

@@ -107,8 +107,8 @@ export class SocketServer {
                         this.#io.to(socket.room).emit("new building", this.#getGame(socket).getBuildings());
                         this.#io.to(socket.room).emit("new resources", this.#getGame(socket).getResources());
                         break;
-                    case "blocked": socket.emit("building error", "locations is blocked");break;
-                    case "resources": socket.emit("building error", "not enough resources");
+                    case "blocked": socket.emit("error", "locations is blocked");break;
+                    case "resources": socket.emit("error", "not enough resources");
                 }
             });
 
@@ -148,6 +148,7 @@ export class SocketServer {
             socket.on("next turn", () => {
                 this.#io.to(socket.room).emit("new resources", this.#getGame(socket).distributeResources());
                 this.#io.to(socket.room).emit("next turn", this.#getGame(socket).getNextTurn());
+                this.#io.to(socket.room).emit("round", this.#getGame(socket).getRound());
                 this.#io.to(socket.room).emit("round", this.#getGame(socket).getRound());
             });
 

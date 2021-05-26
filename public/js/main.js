@@ -28,6 +28,14 @@ window.joinButton = function () {
     document.getElementById("code").value = document.getElementById("code").value.toUpperCase();
 }
 
+window.removeError = function (element) {
+    element.parentElement.classList.add("remove");
+    setTimeout(() => {
+        element.parentElement.nextElementSibling.remove();
+        element.parentElement.remove();
+    },1000);
+}
+
 async function gameLoop() {
     window.gameClient.drawBoard();
     setTimeout(gameLoop, 10);
