@@ -15,10 +15,27 @@ export class DrawBoard {
             // let hex = draw.pixelToHex(draw.point(e.x, e.y));
             let mouse = draw.point(e.x, e.y);
             let closestCenter = draw.findHex(mouse);
-
+            draw.drawredHex(closestCenter);
         });
 
         this.resize();
+    }
+
+    drawredHex(center) {
+        for (let i = 0; i <= 5; i++) {
+            let start = this.hex_corner(center, i);
+            let end = this.hex_corner(center, i + 1);
+            this.drawredLine({x: start.x, y: start.y}, {x: end.x, y: end.y});
+        }
+    }
+
+    drawredLine(start, end) {
+        this.ctx.beginPath();
+        this.ctx.moveTo(start.x, start.y);
+        this.ctx.lineTo(end.x, end.y);
+        this.ctx.strokeStyle = '#ff0000';
+        this.ctx.stroke();
+        this.ctx.closePath();
     }
 
     resize() {
