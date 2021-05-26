@@ -119,6 +119,30 @@ export class SocketClient {
         this.socket.on("round", (round) => {
             document.getElementById("round").innerText = round;
         });
+
+        /**
+         * Handles the "error" event.
+         * Displays an error message.
+         */
+        this.socket.on("error", (error) => {
+            console.log(error);
+            let table = document.getElementById("error");
+            let tr = document.createElement("tr");
+            let td = document.createElement("td");
+            let button = document.createElement("td");
+            let spacer = document.createElement("tr");
+            td.innerText = error;
+            tr.append(td);
+            button.setAttribute("onclick", "removeError(this)");
+            button.innerText = "✖";
+            tr.append(button);
+            table.append(tr);
+            spacer.classList.add("spacer");
+            table.append(spacer);
+            setTimeout(() => {
+                window.removeError(button);
+            },10000);
+        });
     }
 
     /**
