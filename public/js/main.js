@@ -36,7 +36,15 @@ window.removeError = function (element) {
     },1000);
 }
 
+let last = Date.now();
+let fps = 0;
 async function gameLoop() {
+    if(Date.now() - last > 1000) {
+        last = new Date();
+        //document.getElementById("round").innerText = fps;
+        fps = 0;
+    }
+    fps++;
     window.gameClient.drawBoard();
     setTimeout(gameLoop, 10);
 }

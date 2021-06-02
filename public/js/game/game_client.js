@@ -59,7 +59,6 @@ export class GameClient {
      * @param {KeyboardEvent} e
      */
     keyHandler(e) {
-        console.log(typeof e);
         let draw = window.gameClient.draw;
         switch (e.key) {
             case "w": draw.yOffset+=5; break;

@@ -30,11 +30,11 @@ export class SocketClient {
         });
 
         /**
-         * Handles the "room not found" event.
+         * Handles the "join error" event.
          * Shows an alert.
          */
-        this.socket.on("room not found", () => {
-            alert("Requested room does not exist.");
+        this.socket.on("join error", (error) => {
+            alert(error);
         });
 
         /**

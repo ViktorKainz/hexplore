@@ -312,4 +312,12 @@ export class Game {
         }
         return true;
     }
+
+    /**
+     * Returns true if the game has started
+     * @returns {boolean}
+     */
+    hasStarted() {
+        return this.#turn >= 0;
+    }
 }

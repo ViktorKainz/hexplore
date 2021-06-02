@@ -41,7 +41,17 @@ export class SocketServer {
              */
             socket.on("join room", (room) => {
                 if(typeof this.#getRoom(room) === "undefined") {
-                    socket.emit("room not found");
+                    socket.emit("join error", "Requested room does not exist");
+                } else if(this.#getRoom(room).game.hasStarted()) {
+                    if(typeof this.#getRoom(room).game.getPlayer()[socket.user] != "undefined") {
+                        this.#joinRoom(socket, room);
+                        socket.emit("start");
+                        socket.emit("new building", this.#getGame(socket).getBuildings());
+                        socket.emit("new connection", this.#getGame(socket).getConnections());
+                        socket.emit("new resources", this.#getGame(socket).getResources());
+                    } else {
+                        socket.emit("join error", "The game has already started");
+                    }
                 } else {
                     this.#joinRoom(socket, room);
                 }
@@ -53,8 +63,10 @@ export class SocketServer {
              * @param {string} name
              */
             socket.on("set name", (name) => {
-                this.#getGame(socket).addPlayer(socket.user, name);
-                this.#io.to(socket.room).emit("new name", this.#getGame(socket).getPlayer());
+                if(typeof this.#getRoom(socket.room) != "undefined") {
+                    this.#getGame(socket).addPlayer(socket.user, name);
+                    this.#io.to(socket.room).emit("new name", this.#getGame(socket).getPlayer());
+                }
             });
 
             /**
