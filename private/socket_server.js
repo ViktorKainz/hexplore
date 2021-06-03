@@ -120,7 +120,8 @@ export class SocketServer {
                         this.#io.to(socket.room).emit("new resources", this.#getGame(socket).getResources());
                         break;
                     case "blocked": socket.emit("error", "locations is blocked");break;
-                    case "resources": socket.emit("error", "not enough resources");
+                    case "resources": socket.emit("error", "not enough resources");break;
+                    case "no neighbours": socket.emit("error", "The building has to be next to a connection!")
                 }
             });
 
@@ -139,8 +140,9 @@ export class SocketServer {
                         this.#io.to(socket.room).emit("new connection", this.#getGame(socket).getConnections());
                         this.#io.to(socket.room).emit("new resources", this.#getGame(socket).getResources());
                         break;
-                    case "blocked": socket.emit("error", "locations is blocked");break;
-                    case "resources": socket.emit("error", "not enough resources");
+                    case "blocked": socket.emit("error", "The locations is blocked!");break;
+                    case "resources": socket.emit("error", "You don`t have enough resources!");break;
+                    case "no neighbours": socket.emit("error", "The connection has to be next to another connection or building!")
                 }
             });
 

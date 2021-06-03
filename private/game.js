@@ -1,4 +1,4 @@
-import {Board} from "../public/js/game/board.js";
+import {Board, NEIGHBOURS} from "../public/js/game/board.js";
 import {WorldGenerator} from "./world_genertator.js";
 import {Building, BUILDING_COSTS, BUILDING_TYPES} from "../public/js/game/building.js";
 import {Connection, CONNECTION_COSTS, CONNECTION_TYPES} from "../public/js/game/connection.js";
@@ -125,11 +125,23 @@ export class Game {
      */
     addBuilding(player, type, x1, y1, x2, y2, x3, y3) {
         let coords = JSON.stringify([[x1, y1], [x2, y2], [x3, y3]].sort(Board.compareCoords));
+        let build = 0;
         for (let b in this.#buildings) {
             let c = JSON.stringify(this.#buildings[b].coords);
             if (c === coords) {
                 return "blocked";
             }
+            if (this.#buildings[b].player === player) {
+                build++;
+            }
+        }
+        let neighbourConnections = [
+            [[x1, y1], [x2, y2]],
+            [[x1, y1], [x3, y3]],
+            [[x2, y2], [x3, y3]]
+        ];
+        if (build > 1 && !this.hasNeighbour(neighbourConnections, this.#connections, player)) {
+            return "no neighbours";
         }
         let r = this.#resources[player];
         let costs;
@@ -171,6 +183,48 @@ export class Game {
                 return "blocked";
             }
         }
+        let neighbours = [];
+        switch (JSON.stringify([x1 - x2, y1 - y2])) {
+            case JSON.stringify(NEIGHBOURS.BOT_RIGHT):
+                neighbours[0] = [x1 + NEIGHBOURS.RIGHT[0], y1 + NEIGHBOURS.RIGHT[1]];
+                neighbours[1] = [x1 + NEIGHBOURS.BOT_LEFT[0], y1 + NEIGHBOURS.BOT_LEFT[1]];
+                break;
+            case JSON.stringify(NEIGHBOURS.TOP_RIGHT):
+                neighbours[0] = [x1 + NEIGHBOURS.RIGHT[0], y1 + NEIGHBOURS.RIGHT[1]];
+                neighbours[1] = [x1 + NEIGHBOURS.TOP_LEFT[0], y1 + NEIGHBOURS.TOP_LEFT[1]];
+                break;
+            case JSON.stringify(NEIGHBOURS.BOT_LEFT):
+                neighbours[0] = [x1 + NEIGHBOURS.LEFT[0], y1 + NEIGHBOURS.LEFT[1]];
+                neighbours[1] = [x1 + NEIGHBOURS.BOT_RIGHT[0], y1 + NEIGHBOURS.BOT_RIGHT[1]];
+                break;
+            case JSON.stringify(NEIGHBOURS.TOP_LEFT):
+                neighbours[0] = [x1 + NEIGHBOURS.LEFT[0], y1 + NEIGHBOURS.LEFT[1]];
+                neighbours[1] = [x1 + NEIGHBOURS.TOP_RIGHT[0], y1 + NEIGHBOURS.TOP_RIGHT[1]];
+                break;
+            case JSON.stringify(NEIGHBOURS.RIGHT):
+                neighbours[0] = [x1 + NEIGHBOURS.TOP_RIGHT[0], y1 + NEIGHBOURS.TOP_RIGHT[1]];
+                neighbours[1] = [x1 + NEIGHBOURS.BOT_RIGHT[0], y1 + NEIGHBOURS.BOT_RIGHT[1]];
+                break;
+            case JSON.stringify(NEIGHBOURS.LEFT):
+                neighbours[0] = [x1 + NEIGHBOURS.TOP_LEFT[0], y1 + NEIGHBOURS.TOP_LEFT[1]];
+                neighbours[1] = [x1 + NEIGHBOURS.BOT_LEFT[0], y1 + NEIGHBOURS.BOT_LEFT[1]];
+                break;
+        }
+        let neighbourConnections = [
+            [[x1, y1], neighbours[0]],
+            [[x1, y1], neighbours[1]],
+            [[x2, y2], neighbours[0]],
+            [[x2, y2], neighbours[1]]
+        ];
+        if (!this.hasNeighbour(neighbourConnections, this.#connections, player)) {
+            let neighbourBuildings = [
+                [[x1, y1], [x2, y2], neighbours[0]],
+                [[x1, y1], [x2, y2], neighbours[1]]
+            ];
+            if (!this.hasNeighbour(neighbourBuildings, this.#buildings, player)) {
+                return "no neighbours";
+            }
+        }
         let r = this.#resources[player];
         let costs;
         switch (type) {
@@ -190,6 +244,26 @@ export class Game {
         r.crops -= costs.crops;
         this.#connections.push(new Connection(player, type, x1, y1, x2, y2));
         return true;
+    }
+
+    /**
+     * Returns true if one of the neighbours is a building or connection of the player
+     * @param {int[][][]} neighbours Array of coordinates of possible neighbours
+     * @param {Building[]|Connection[]} all Array of all buildings or connections
+     * @param {int} player
+     * @returns {boolean}
+     */
+    hasNeighbour(neighbours, all, player) {
+        for (let n in neighbours) {
+            let coords = JSON.stringify(neighbours[n].sort(Board.compareCoords));
+            for (let a in all) {
+                let c = JSON.stringify(all[a].coords);
+                if (c === coords && all[a].player === player) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**
