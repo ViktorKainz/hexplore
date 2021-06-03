@@ -227,6 +227,9 @@ export class SocketClient {
         this.socket.emit("set user", user);
     }
 
+    /**
+     * Sends the server a request to get a preview board
+     */
     getPreview() {
         this.socket.emit("get preview");
     }

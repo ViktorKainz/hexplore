@@ -191,9 +191,13 @@ export class SocketServer {
                 this.#io.to(socket.room).emit("new message", socket.user, message);
             });
 
+            /**
+             * Handles the "get preview" event.
+             * Sends the client a new preview board.
+             */
             socket.on("get preview", () => {
                 let board = new Board();
-                WorldGenerator.generateCircle(board, 0, 0, 20);
+                WorldGenerator.generateCircle(board, 0, 0, 5);
                 socket.emit("set board", board.map);
             });
         });

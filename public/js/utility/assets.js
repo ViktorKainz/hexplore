@@ -21,7 +21,8 @@ export class Assets extends EventTarget {
             [TILE_TYPES.TREES, "Trees.png"],
             [TILE_TYPES.GRASS+"_Border", "Grass_Border.png"],
             [TILE_TYPES.DESERT+"_Border", "Desert_Border.png"],
-            [TILE_TYPES.WATER+"_Border", "Water_Border.png"]
+            [TILE_TYPES.WATER+"_Border", "Water_Border.png"],
+            ["shadow", "Shadow.png"]
         ];
     }
 

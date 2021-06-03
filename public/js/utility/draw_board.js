@@ -5,12 +5,22 @@ import {NEIGHBOURS} from "../game/board.js";
 export class DrawBoard {
 
     constructor() {
-        this.canvas = document.querySelector('canvas');
+        this.canvas = document.getElementById("canvas");
         this.ctx = this.canvas.getContext('2d');
+        this.shadow = document.getElementById("shadow").getContext('2d');
+        this.background = document.getElementById("background").getContext('2d');
         this.size = 40;
         this.xOffset = 0;
         this.yOffset = 0;
         this.hexcenters = [];
+
+        let img = new Image();
+        img.src = "../assets/Clouds.jpg";
+        img.onload = function () {
+            let d = gameClient.draw;
+            d.clouds = d.ctx.createPattern(img, "repeat");
+            d.background.fillStyle = d.clouds;
+        }
 
         //Interaktivität --> bei Mausklick wird mit findHex der Mittelpunkt + q&r herausgefunden
         this.canvas.addEventListener("click", (e) => {
@@ -50,6 +60,8 @@ export class DrawBoard {
         this.hexHeight = this.size * 2;
         this.hexWidth = Math.sqrt(3) * this.size;
         this.vertDist = this.hexHeight * 3 / 4;
+
+        this.background.fillStyle = this.clouds;
     }
 
     //Zeichnet ein einzelnes Hexagon
@@ -216,6 +228,10 @@ export class DrawBoard {
     drawAssets(board, assets) {
         this.hexcenters = [];
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.shadow.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.background.translate(this.xOffset*0.5, this.yOffset*0.5);
+        this.background.fillRect(-this.xOffset*0.5, -this.yOffset*0.5, this.canvas.width, this.canvas.height);
+        this.background.translate(-this.xOffset*0.5, -this.yOffset*0.5);
         for (let y = board.getMinY(); y <= board.getMaxY(); y++) {
             for (let x = board.getMinX(); x <= board.getMaxX(); x++) {
                 let tile = board.getTile(x, y);
@@ -239,10 +255,13 @@ export class DrawBoard {
                             }
                             this.ctx.drawImage(assets.get(tile.type), center.x - (this.hexWidth / 2), center.y - (this.hexHeight / 2), this.hexWidth, this.hexHeight);
                         }
-
                         this.hexcenters.push(new HexPosition(center, x, y));
                         this.drawHex(center);
                         //this.drawHexCoordinates(center, this.hex(x, y));
+                    }
+                    let shadow = this.hex_to_pixel(this.hex(x + NEIGHBOURS.BOT_RIGHT[0]*2, y + NEIGHBOURS.BOT_RIGHT[1]*2));
+                    if (shadow.x >= -this.size && shadow.y >= -this.size && shadow.x <= this.canvas.width + this.size && shadow.y <= this.canvas.height + this.size) {
+                        this.shadow.drawImage(assets.get("shadow"), shadow.x, shadow.y - (this.hexHeight / 2), this.hexWidth + 2, this.hexHeight + 2);
                     }
                 }
             }

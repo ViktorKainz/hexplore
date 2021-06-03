@@ -5,6 +5,12 @@ function resize() {
     let c = document.getElementById("canvas");
     c.setAttribute("width", window.innerWidth + "px");
     c.setAttribute("height", window.innerHeight + "px");
+    let s = document.getElementById("shadow");
+    s.setAttribute("width", window.innerWidth + "px");
+    s.setAttribute("height", window.innerHeight + "px");
+    let b = document.getElementById("background");
+    b.setAttribute("width", window.innerWidth + "px");
+    b.setAttribute("height", window.innerHeight + "px");
     if (typeof window.gameClient != "undefined") {
         window.gameClient.resize();
     }
