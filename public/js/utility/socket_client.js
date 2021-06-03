@@ -1,6 +1,7 @@
 /**
  * Class that handles the communication with the server
  */
+
 export class SocketClient {
 
     constructor() {
@@ -109,6 +110,7 @@ export class SocketClient {
         this.socket.on("start", () => {
             document.getElementById("overlay").style.display = "none";
             document.getElementById("canvas").style.display = "block";
+            gameClient.input = true;
             this.getBoard();
         });
 
@@ -223,5 +225,9 @@ export class SocketClient {
      */
     setUser(user) {
         this.socket.emit("set user", user);
+    }
+
+    getPreview() {
+        this.socket.emit("get preview");
     }
 }

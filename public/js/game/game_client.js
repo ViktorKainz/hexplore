@@ -13,10 +13,12 @@ export class GameClient {
     #ready = {};
 
     constructor() {
+        this.input = false;
         this.#board = new Board();
         this.assets = new Assets();
         this.assets.addEventListener("loaded", (e) => {
             this.draw = new DrawBoard();
+            socket.getPreview();
         });
         this.assets.load();
     }
@@ -59,14 +61,16 @@ export class GameClient {
      * @param {KeyboardEvent} e
      */
     keyHandler(e) {
-        let draw = window.gameClient.draw;
-        switch (e.key) {
-            case "w": draw.yOffset+=5; break;
-            case "s": draw.yOffset-=5; break;
-            case "a": draw.xOffset+=5; break;
-            case "d": draw.xOffset-=5; break;
-            case "c": draw.yOffset=0;
-                      draw.xOffset=0; break;
+        if(window.gameClient.input) {
+            let draw = window.gameClient.draw;
+            switch (e.key) {
+                case "w": draw.yOffset+=5; break;
+                case "s": draw.yOffset-=5; break;
+                case "a": draw.xOffset+=5; break;
+                case "d": draw.xOffset-=5; break;
+                case "c": draw.yOffset=0;
+                    draw.xOffset=0; break;
+            }
         }
     }
 

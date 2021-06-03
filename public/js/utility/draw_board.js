@@ -7,7 +7,7 @@ export class DrawBoard {
     constructor() {
         this.canvas = document.querySelector('canvas');
         this.ctx = this.canvas.getContext('2d');
-        this.size = 30;
+        this.size = 40;
         this.xOffset = 0;
         this.yOffset = 0;
         this.hexcenters = [];
@@ -19,7 +19,7 @@ export class DrawBoard {
             let mouse = draw.point(e.x, e.y);
             let hexposition = draw.findHex(mouse);
             let center = hexposition.center;
-            let hex = this.hex(hexposition.x,hexposition.y);
+            let hex = this.hex(hexposition.x, hexposition.y);
 
             let hexcorner = [];
             let nearestCorner = 0;
@@ -29,7 +29,7 @@ export class DrawBoard {
                 let corner = this.hex_corner(center, i);
                 hexcorner.push(corner);
                 let newDistance = this.calcDistance(mouse, corner);
-                if(newDistance < oldDistance){
+                if (newDistance < oldDistance) {
                     nearestCorner = i;
                     oldDistance = newDistance;
                 }
@@ -93,49 +93,55 @@ export class DrawBoard {
     }
 
     //berechnet Distance zwischen zwei Punkten
-    calcDistance(p1, p2){
+    calcDistance(p1, p2) {
         let xdiff = Math.abs(p1.x - p2.x);
         let ydiff = Math.abs(p1.y - p2.y);
-        let distance = Math.sqrt(Math.pow(xdiff,2) + Math.pow(ydiff,2));
+        let distance = Math.sqrt(Math.pow(xdiff, 2) + Math.pow(ydiff, 2));
         return distance;
     }
 
     //vergleicht Mouseklick mit Hexagons
-    findHex(mouse){
+    findHex(mouse) {
         let hexPosition = this.hexcenters[0];
         let oldDistance = this.calcDistance(mouse, hexPosition.center);
-        for (let i = 1; i < this.hexcenters.length; i++){
-                let newDistance = this.calcDistance(mouse, this.hexcenters[i].center);
-                if(newDistance < oldDistance){
-                    oldDistance = newDistance;
-                    hexPosition = this.hexcenters[i];
-                }
+        for (let i = 1; i < this.hexcenters.length; i++) {
+            let newDistance = this.calcDistance(mouse, this.hexcenters[i].center);
+            if (newDistance < oldDistance) {
+                oldDistance = newDistance;
+                hexPosition = this.hexcenters[i];
+            }
         }
         return hexPosition;
     }
 
     //findet Zwei Nachbarn des Hexagons abhängig vom Eckpunkt
-    findNeighbors(hex, corner){
+    findNeighbors(hex, corner) {
         let nearNeighbors = [];
-        switch (corner){
-            case 5: nearNeighbors.push(this.hex(NEIGHBOURS.TOP_LEFT[0] + hex.q, NEIGHBOURS.TOP_LEFT[1] + hex.r));
-                    nearNeighbors.push(this.hex(NEIGHBOURS.TOP_RIGHT[0] + hex.q, NEIGHBOURS.TOP_RIGHT[1] + hex.r));
+        switch (corner) {
+            case 5:
+                nearNeighbors.push(this.hex(NEIGHBOURS.TOP_LEFT[0] + hex.q, NEIGHBOURS.TOP_LEFT[1] + hex.r));
+                nearNeighbors.push(this.hex(NEIGHBOURS.TOP_RIGHT[0] + hex.q, NEIGHBOURS.TOP_RIGHT[1] + hex.r));
                 break;
-            case 0: nearNeighbors.push(this.hex(NEIGHBOURS.TOP_RIGHT[0] + hex.q, NEIGHBOURS.TOP_RIGHT[1] + hex.r));
-                    nearNeighbors.push(this.hex(NEIGHBOURS.RIGHT[0] + hex.q, NEIGHBOURS.RIGHT[1] + hex.r));
-                    break;
-            case 1: nearNeighbors.push(this.hex(NEIGHBOURS.RIGHT[0] + hex.q, NEIGHBOURS.RIGHT[1] + hex.r));
-                    nearNeighbors.push(this.hex(NEIGHBOURS.BOT_RIGHT[0] + hex.q, NEIGHBOURS.BOT_RIGHT[1] + hex.r));
-                    break;
-            case 2: nearNeighbors.push(this.hex(NEIGHBOURS.BOT_RIGHT[0] + hex.q, NEIGHBOURS.BOT_RIGHT[1] + hex.r));
-                    nearNeighbors.push(this.hex(NEIGHBOURS.BOT_LEFT[0] + hex.q, NEIGHBOURS.BOT_LEFT[1] + hex.r));
-                    break;
-            case 3: nearNeighbors.push(this.hex(NEIGHBOURS.BOT_LEFT[0] + hex.q, NEIGHBOURS.BOT_LEFT[1] + hex.r));
-                    nearNeighbors.push(this.hex(NEIGHBOURS.LEFT[0] + hex.q, NEIGHBOURS.LEFT[1] + hex.r));
-                    break;
-            case 4: nearNeighbors.push(this.hex(NEIGHBOURS.LEFT[0] + hex.q, NEIGHBOURS.LEFT[1] + hex.r));
-                    nearNeighbors.push(this.hex(NEIGHBOURS.TOP_LEFT[0] + hex.q, NEIGHBOURS.TOP_LEFT[1] + hex.r));
-                    break;
+            case 0:
+                nearNeighbors.push(this.hex(NEIGHBOURS.TOP_RIGHT[0] + hex.q, NEIGHBOURS.TOP_RIGHT[1] + hex.r));
+                nearNeighbors.push(this.hex(NEIGHBOURS.RIGHT[0] + hex.q, NEIGHBOURS.RIGHT[1] + hex.r));
+                break;
+            case 1:
+                nearNeighbors.push(this.hex(NEIGHBOURS.RIGHT[0] + hex.q, NEIGHBOURS.RIGHT[1] + hex.r));
+                nearNeighbors.push(this.hex(NEIGHBOURS.BOT_RIGHT[0] + hex.q, NEIGHBOURS.BOT_RIGHT[1] + hex.r));
+                break;
+            case 2:
+                nearNeighbors.push(this.hex(NEIGHBOURS.BOT_RIGHT[0] + hex.q, NEIGHBOURS.BOT_RIGHT[1] + hex.r));
+                nearNeighbors.push(this.hex(NEIGHBOURS.BOT_LEFT[0] + hex.q, NEIGHBOURS.BOT_LEFT[1] + hex.r));
+                break;
+            case 3:
+                nearNeighbors.push(this.hex(NEIGHBOURS.BOT_LEFT[0] + hex.q, NEIGHBOURS.BOT_LEFT[1] + hex.r));
+                nearNeighbors.push(this.hex(NEIGHBOURS.LEFT[0] + hex.q, NEIGHBOURS.LEFT[1] + hex.r));
+                break;
+            case 4:
+                nearNeighbors.push(this.hex(NEIGHBOURS.LEFT[0] + hex.q, NEIGHBOURS.LEFT[1] + hex.r));
+                nearNeighbors.push(this.hex(NEIGHBOURS.TOP_LEFT[0] + hex.q, NEIGHBOURS.TOP_LEFT[1] + hex.r));
+                break;
         }
         console.log("hex");
         console.log(hex);
@@ -202,31 +208,31 @@ export class DrawBoard {
     }
 
     //Cube coordinates
-    cube(x, y, z){
-        return{x,y,z};
+    cube(x, y, z) {
+        return {x, y, z};
     }
 
     //Zeichnet Images auf das jeweilige Hexagon
     drawAssets(board, assets) {
         this.hexcenters = [];
-        this.ctx.clearRect(0,0,this.canvas.width, this.canvas.height);
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         for (let y = board.getMinY(); y <= board.getMaxY(); y++) {
             for (let x = board.getMinX(); x <= board.getMaxX(); x++) {
                 let tile = board.getTile(x, y);
                 if (typeof tile != "undefined" && tile != null) {
                     let center = this.hex_to_pixel(this.hex(x, y));
-                    if(center.x >= -this.size && center.y >= -this.size && center.x <= this.canvas.width + this.size && center.y <= this.canvas.height + this.size) {
-                        if((tile.type === TILE_TYPES.GRASS || tile.type === TILE_TYPES.DESERT || tile.type === TILE_TYPES.WATER) &&
-                           (typeof board.getTile(x+NEIGHBOURS.BOT_LEFT[0], y+NEIGHBOURS.BOT_LEFT[1]) == "undefined" ||
-                            typeof board.getTile(x+NEIGHBOURS.BOT_RIGHT[0], y+NEIGHBOURS.BOT_RIGHT[1]) == "undefined")) {
-                            this.ctx.drawImage(assets.get(tile.type+"_Border"), center.x - (this.hexWidth / 2), center.y - (this.hexHeight / 2), this.hexWidth, this.hexHeight * 1.23);
+                    if (center.x >= -this.size && center.y >= -this.size && center.x <= this.canvas.width + this.size && center.y <= this.canvas.height + this.size) {
+                        if ((tile.type === TILE_TYPES.GRASS || tile.type === TILE_TYPES.DESERT || tile.type === TILE_TYPES.WATER) &&
+                            (typeof board.getTile(x + NEIGHBOURS.BOT_LEFT[0], y + NEIGHBOURS.BOT_LEFT[1]) == "undefined" ||
+                                typeof board.getTile(x + NEIGHBOURS.BOT_RIGHT[0], y + NEIGHBOURS.BOT_RIGHT[1]) == "undefined")) {
+                            this.ctx.drawImage(assets.get(tile.type + "_Border"), center.x - (this.hexWidth / 2), center.y - (this.hexHeight / 2), this.hexWidth, this.hexHeight * 1.23);
                         } else {
                             if (typeof Tile.getBackground(tile.type) != "undefined") {
                                 let background = Tile.getBackground(tile.type);
-                                if((background === TILE_TYPES.GRASS || background === TILE_TYPES.DESERT || background === TILE_TYPES.WATER) &&
-                                    (typeof board.getTile(x+NEIGHBOURS.BOT_LEFT[0], y+NEIGHBOURS.BOT_LEFT[1]) == "undefined" ||
-                                        typeof board.getTile(x+NEIGHBOURS.BOT_RIGHT[0], y+NEIGHBOURS.BOT_RIGHT[1]) == "undefined")) {
-                                    this.ctx.drawImage(assets.get(background+"_Border"), center.x - (this.hexWidth / 2), center.y - (this.hexHeight / 2), this.hexWidth, this.hexHeight * 1.23);
+                                if ((background === TILE_TYPES.GRASS || background === TILE_TYPES.DESERT || background === TILE_TYPES.WATER) &&
+                                    (typeof board.getTile(x + NEIGHBOURS.BOT_LEFT[0], y + NEIGHBOURS.BOT_LEFT[1]) == "undefined" ||
+                                        typeof board.getTile(x + NEIGHBOURS.BOT_RIGHT[0], y + NEIGHBOURS.BOT_RIGHT[1]) == "undefined")) {
+                                    this.ctx.drawImage(assets.get(background + "_Border"), center.x - (this.hexWidth / 2), center.y - (this.hexHeight / 2), this.hexWidth, this.hexHeight * 1.23);
                                 } else {
                                     this.ctx.drawImage(assets.get(Tile.getBackground(tile.type)), center.x - (this.hexWidth / 2), center.y - (this.hexHeight / 2), this.hexWidth, this.hexHeight);
                                 }
@@ -234,7 +240,7 @@ export class DrawBoard {
                             this.ctx.drawImage(assets.get(tile.type), center.x - (this.hexWidth / 2), center.y - (this.hexHeight / 2), this.hexWidth, this.hexHeight);
                         }
 
-                        this.hexcenters.push(new HexPosition(center,x,y));
+                        this.hexcenters.push(new HexPosition(center, x, y));
                         this.drawHex(center);
                         //this.drawHexCoordinates(center, this.hex(x, y));
                     }

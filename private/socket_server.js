@@ -1,5 +1,7 @@
 import {Server} from "socket.io";
 import {Game} from "./game.js";
+import {Board} from "../public/js/game/board.js";
+import {WorldGenerator} from "./world_genertator.js";
 
 /**
  * Class that handles the communication with the clients
@@ -187,7 +189,13 @@ export class SocketServer {
              */
             socket.on("send message", (message) => {
                 this.#io.to(socket.room).emit("new message", socket.user, message);
-            })
+            });
+
+            socket.on("get preview", () => {
+                let board = new Board();
+                WorldGenerator.generateCircle(board, 0, 0, 20);
+                socket.emit("set board", board.map);
+            });
         });
     }
 
