@@ -33,6 +33,7 @@ h1 {
 
 #background {
     z-index: -3;
+    filter: blur(5px);
 }
 
 #shadow {
@@ -106,7 +107,7 @@ input {
 #error {
     position: fixed;
     right: 1%;
-    top: 5%;
+    top: 10%;
     border-collapse: separate;
     border-spacing: 0;
 }
@@ -169,5 +170,11 @@ input {
     to {
         opacity: 0;
     }
+}
+
+#points {
+    position: fixed;
+    left: 10px;
+    top: 5%;
 }
 

@@ -12,7 +12,14 @@ export class DrawBoard {
         this.size = 40;
         this.xOffset = 0;
         this.yOffset = 0;
+        this.xWind = (Math.floor(Math.random() * 10) - 5) / 10;
+        this.yWind = (Math.floor(Math.random() * 10) - 5) / 10;
+        this.xWindOffset = 0;
+        this.yWindOffset = 0;
         this.hexcenters = [];
+
+        console.log(this.xWind);
+        console.log(this.yWind);
 
         let img = new Image();
         img.src = "../assets/Clouds.jpg";
@@ -229,9 +236,11 @@ export class DrawBoard {
         this.hexcenters = [];
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.shadow.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.background.translate(this.xOffset*0.5, this.yOffset*0.5);
-        this.background.fillRect(-this.xOffset*0.5, -this.yOffset*0.5, this.canvas.width, this.canvas.height);
-        this.background.translate(-this.xOffset*0.5, -this.yOffset*0.5);
+        this.background.translate(this.xOffset*0.5+this.xWindOffset, this.yOffset*0.5+this.yWindOffset);
+        this.background.fillRect(-this.xOffset*0.5-this.xWindOffset, -this.yOffset*0.5-this.yWindOffset, this.canvas.width, this.canvas.height);
+        this.background.translate(-this.xOffset*0.5-this.xWindOffset, -this.yOffset*0.5-this.yWindOffset);
+        this.xWindOffset+=this.xWind;
+        this.yWindOffset+=this.yWind;
         for (let y = board.getMinY(); y <= board.getMaxY(); y++) {
             for (let x = board.getMinX(); x <= board.getMaxX(); x++) {
                 let tile = board.getTile(x, y);
