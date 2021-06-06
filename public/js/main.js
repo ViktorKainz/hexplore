@@ -42,6 +42,20 @@ window.removeError = function (element) {
     },1000);
 }
 
+window.music = false;
+window.toggleMusic = function () {
+    let music = document.getElementById("music");
+    let toggle = document.getElementById("musictoggle");
+    if(window.music) {
+        music.pause();
+        toggle.innerText = "🔇";
+    } else {
+        music.play();
+        toggle.innerText = "🔊";
+    }
+    window.music = !window.music;
+}
+
 let last = Date.now();
 let fps = 0;
 async function gameLoop() {

@@ -18,9 +18,6 @@ export class DrawBoard {
         this.yWindOffset = 0;
         this.hexcenters = [];
 
-        console.log(this.xWind);
-        console.log(this.yWind);
-
         let img = new Image();
         img.src = "../assets/Clouds.jpg";
         img.onload = function () {

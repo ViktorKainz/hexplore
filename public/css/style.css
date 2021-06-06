@@ -107,7 +107,7 @@ input {
 #error {
     position: fixed;
     right: 1%;
-    top: 10%;
+    top: 40px;
     border-collapse: separate;
     border-spacing: 0;
 }
@@ -176,5 +176,11 @@ input {
     position: fixed;
     left: 10px;
     top: 5%;
+}
+
+#musictoggle {
+    position: fixed;
+    right: 10px;
+    top: 25px;
 }
 
