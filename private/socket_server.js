@@ -79,6 +79,7 @@ export class SocketServer {
                 this.#getGame(socket).setReady(socket.user);
                 if(this.#getGame(socket).isReady()) {
                     this.#io.to(socket.room).emit("start");
+                    this.#io.to(socket.room).emit("points", this.#getGame(socket).getPoints());
                     this.#io.to(socket.room).emit("next turn", this.#getGame(socket).getNextTurn());
                     this.#io.to(socket.room).emit("round", this.#getGame(socket).getRound());
                 } else {
@@ -162,9 +163,9 @@ export class SocketServer {
              * Distributes Resources to the player and starts the next turn.
              */
             socket.on("next turn", () => {
+                this.#io.to(socket.room).emit("points", this.#getGame(socket).getPoints());
                 this.#io.to(socket.room).emit("new resources", this.#getGame(socket).distributeResources());
                 this.#io.to(socket.room).emit("next turn", this.#getGame(socket).getNextTurn());
-                this.#io.to(socket.room).emit("round", this.#getGame(socket).getRound());
                 this.#io.to(socket.room).emit("round", this.#getGame(socket).getRound());
             });
 

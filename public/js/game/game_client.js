@@ -11,6 +11,7 @@ export class GameClient {
     #connections = [];
     #player = {};
     #ready = {};
+    #points = {};
 
     constructor() {
         this.input = false;
@@ -52,6 +53,21 @@ export class GameClient {
             status.innerText = this.#ready[p] ? "✓" : "✗";
             status.setAttribute("class", this.#ready[p] ? "green" : "red");
             tr.appendChild(status);
+            table.appendChild(tr);
+        }
+    }
+
+    updatePoints() {
+        let table = document.getElementById("points");
+        table.innerHTML = "";
+        for(let p in this.#points) {
+            let tr = document.createElement("tr");
+            let name = document.createElement("td");
+            name.innerText = this.#player[p];
+            tr.appendChild(name);
+            let points = document.createElement("td");
+            points.innerText = this.#points[p];
+            tr.appendChild(points);
             table.appendChild(tr);
         }
     }
@@ -145,5 +161,14 @@ export class GameClient {
      */
     setReady(ready) {
         this.#ready = ready;
+    }
+
+    /**
+     * Sets the points of player
+     * @param {{}} points
+     */
+    setPoints(points) {
+        this.#points = points;
+        this.updatePoints();
     }
 }

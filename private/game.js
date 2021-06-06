@@ -16,6 +16,7 @@ export class Game {
     #player = {};
     #ready = {};
     #resources = {};
+    #points = {};
     #round;
     #turn;
 
@@ -161,6 +162,7 @@ export class Game {
         r.wool -= costs.wool;
         r.crops -= costs.crops;
         this.#buildings.push(new Building(player, type, x1, y1, x2, y2, x3, y3));
+        this.#points[player]++;
         return true;
     }
 
@@ -332,6 +334,7 @@ export class Game {
         this.#player[id] = name;
         this.#ready[id] = false;
         this.#resources[id] = new Resources(0, 0, 0, 0);
+        this.#points[id] = 0;
     }
 
     /**
@@ -393,5 +396,12 @@ export class Game {
      */
     hasStarted() {
         return this.#turn >= 0;
+    }
+
+    /**
+     * Returns the points of all player
+     */
+    getPoints() {
+        return this.#points;
     }
 }

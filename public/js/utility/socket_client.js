@@ -127,7 +127,6 @@ export class SocketClient {
          * Displays an error message.
          */
         this.socket.on("error", (error) => {
-            console.log(error);
             let table = document.getElementById("error");
             let tr = document.createElement("tr");
             let td = document.createElement("td");
@@ -144,6 +143,13 @@ export class SocketClient {
             setTimeout(() => {
                 window.removeError(button);
             },10000);
+        });
+
+        /**
+         * Handles the "points" event.
+         */
+        this.socket.on("points", (points) => {
+            gameClient.setPoints(points);
         });
     }
 
