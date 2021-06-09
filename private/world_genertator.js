@@ -51,6 +51,7 @@ export class WorldGenerator {
      * @param {int} r
      */
     static generateRing(board, x, y, r) {
+        console.log(x + " " + y);
         let active = [x, y];
         for(let i = 0; i < r; i++) {
             active = [active[0]+NEIGHBOURS.RIGHT[0],active[1]+NEIGHBOURS.RIGHT[1]];
