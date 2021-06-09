@@ -127,22 +127,7 @@ export class SocketClient {
          * Displays an error message.
          */
         this.socket.on("error", (error) => {
-            let table = document.getElementById("error");
-            let tr = document.createElement("tr");
-            let td = document.createElement("td");
-            let button = document.createElement("td");
-            let spacer = document.createElement("tr");
-            td.innerText = error;
-            tr.append(td);
-            button.setAttribute("onclick", "removeError(this)");
-            button.innerText = "✖";
-            tr.append(button);
-            table.append(tr);
-            spacer.classList.add("spacer");
-            table.append(spacer);
-            setTimeout(() => {
-                window.removeError(button);
-            },10000);
+            gameClient.showError(error);
         });
 
         /**

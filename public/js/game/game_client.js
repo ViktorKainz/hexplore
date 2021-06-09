@@ -171,4 +171,27 @@ export class GameClient {
         this.#points = points;
         this.updatePoints();
     }
+
+    /**
+     * Displays an error
+     * @param {string} error
+     */
+    showError(error) {
+        let table = document.getElementById("error");
+        let tr = document.createElement("tr");
+        let td = document.createElement("td");
+        let button = document.createElement("td");
+        let spacer = document.createElement("tr");
+        td.innerText = error;
+        tr.append(td);
+        button.setAttribute("onclick", "removeError(this)");
+        button.innerText = "✖";
+        tr.append(button);
+        table.append(tr);
+        spacer.classList.add("spacer");
+        table.append(spacer);
+        setTimeout(() => {
+            window.removeError(button);
+        },10000);
+    }
 }
