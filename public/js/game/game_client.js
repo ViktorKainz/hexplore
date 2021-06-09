@@ -44,6 +44,13 @@ export class GameClient {
     updateLobby() {
         let table = document.getElementById("player");
         table.innerHTML = "";
+        let tr = document.createElement("tr");
+        let td = document.createElement("td");
+        td.innerText = Object.keys(this.#player).length + " of 6";
+        td.setAttribute("colspan", "2");
+        td.style.textAlign = "center";
+        tr.appendChild(td);
+        table.appendChild(tr);
         for(let p in this.#player) {
             let tr = document.createElement("tr");
             let name = document.createElement("td");

@@ -54,6 +54,8 @@ export class SocketServer {
                     } else {
                         socket.emit("join error", "The game has already started");
                     }
+                } else if(Object.keys(this.#getRoom(room).game.getPlayer()).length >= 6) {
+                    socket.emit("join error", "Requested room is full");
                 } else {
                     this.#joinRoom(socket, room);
                 }
