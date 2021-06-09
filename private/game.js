@@ -19,6 +19,7 @@ export class Game {
     #points = {};
     #round;
     #turn;
+    #multiplier;
 
     constructor() {
         this.#board = new Board();
@@ -33,6 +34,12 @@ export class Game {
      */
     getNextTurn() {
         this.#turn++;
+        this.#multiplier = new Resources(
+            ((Math.floor(Math.random() * 15)) + 5) / 10,
+            ((Math.floor(Math.random() * 15)) + 5) / 10,
+            ((Math.floor(Math.random() * 15)) + 5) / 10,
+            ((Math.floor(Math.random() * 15)) + 5) / 10
+        );
         if (this.#turn === Object.keys(this.#player).length) {
             this.#round++;
             this.#turn = 0;
@@ -67,10 +74,10 @@ export class Game {
                         r.wool++;
                 }
             }
-            this.#resources[player].wood += r.wood * amount;
-            this.#resources[player].stone += r.stone * amount;
-            this.#resources[player].wool += r.wool * amount;
-            this.#resources[player].crops += r.crops * amount;
+            this.#resources[player].wood += Math.round(r.wood * amount * this.#multiplier.wood);
+            this.#resources[player].stone += Math.round(r.stone * amount * this.#multiplier.stone);
+            this.#resources[player].wool += Math.round(r.wool * amount * this.#multiplier.wool);
+            this.#resources[player].crops += Math.round(r.crops * amount * this.#multiplier.crops);
         }
         return this.#resources;
     }
