@@ -163,6 +163,9 @@ export class Game {
         r.crops -= costs.crops;
         this.#buildings.push(new Building(player, type, x1, y1, x2, y2, x3, y3));
         this.#points[player]++;
+        for(let i in coords) {
+            WorldGenerator.generateCircle(this.#board, coords[i][0], coords[i][1], 1);
+        }
         return true;
     }
 
@@ -245,6 +248,9 @@ export class Game {
         r.wool -= costs.wool;
         r.crops -= costs.crops;
         this.#connections.push(new Connection(player, type, x1, y1, x2, y2));
+        for(let i in coords) {
+            WorldGenerator.generateCircle(this.#board, coords[i][0], coords[i][1], 1);
+        }
         return true;
     }
 

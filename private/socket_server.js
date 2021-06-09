@@ -121,6 +121,7 @@ export class SocketServer {
                     case true:
                         this.#io.to(socket.room).emit("new building", this.#getGame(socket).getBuildings());
                         this.#io.to(socket.room).emit("new resources", this.#getGame(socket).getResources());
+                        this.#io.to(socket.room).emit("set board", this.#getGame(socket).getBoard());
                         break;
                     case "blocked": socket.emit("error", "locations is blocked");break;
                     case "resources": socket.emit("error", "not enough resources");break;
@@ -142,6 +143,7 @@ export class SocketServer {
                     case true:
                         this.#io.to(socket.room).emit("new connection", this.#getGame(socket).getConnections());
                         this.#io.to(socket.room).emit("new resources", this.#getGame(socket).getResources());
+                        this.#io.to(socket.room).emit("set board", this.#getGame(socket).getBoard());
                         break;
                     case "blocked": socket.emit("error", "The locations is blocked!");break;
                     case "resources": socket.emit("error", "You don`t have enough resources!");break;
