@@ -1,4 +1,6 @@
 import {TILE_TYPES} from "../game/tile.js";
+import {BUILDING_TYPES} from "../game/building.js";
+import {CONNECTION_TYPES} from "../game/connection.js";
 
 const folder = "assets/";
 
@@ -22,7 +24,10 @@ export class Assets extends EventTarget {
             [TILE_TYPES.GRASS+"_Border", "Grass_Border.png"],
             [TILE_TYPES.DESERT+"_Border", "Desert_Border.png"],
             [TILE_TYPES.WATER+"_Border", "Water_Border.png"],
-            ["shadow", "Shadow.png"]
+            ["shadow", "Shadow.png"],
+            [BUILDING_TYPES.HOUSE, "house.svg"],
+            [BUILDING_TYPES.CITY, "city.svg"],
+            [CONNECTION_TYPES.SHIP, "ship.svg"]
         ];
     }
 

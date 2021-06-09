@@ -146,6 +146,21 @@ input {
     animation-fill-mode: forwards;
 }
 
+#buildMenu {
+    position: fixed;
+    height: 20vh;
+    width: 30vw;
+    left: 0px;
+    bottom: 0px;
+    background: saddlebrown;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+}
+
+#buildOptions {
+    align-self: center;
+}
 #error tr.remove {
     opacity: 1;
     animation-name: fadeOut;

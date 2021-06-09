@@ -1,6 +1,7 @@
 import {Tile, TILE_TYPES} from "../game/tile.js";
 import {HexPosition} from "../game/hexposition.js";
 import {NEIGHBOURS} from "../game/board.js";
+import {BUILDING_TYPES} from "../game/building.js";
 
 export class DrawBoard {
 
@@ -26,24 +27,30 @@ export class DrawBoard {
             d.background.fillStyle = d.clouds;
         }
 
-        //Interaktivität --> bei Mausklick wird mit findHex der Mittelpunkt + q&r herausgefunden
-        this.canvas.addEventListener("click", (e) => {
-            let draw = window.gameClient.draw;
-            // let hex = draw.pixelToHex(draw.point(e.x, e.y));
+        this.resize();
+    }
+
+    clickevent(e){
+        let draw = window.gameClient.draw;
+        draw.canvas.removeEventListener("click", draw.clickevent);
+        let data = draw.ctx.getImageData(e.x, e.y,1,1).data;
+        // let hex = draw.pixelToHex(draw.point(e.x, e.y));
+        if(data[3] !== 0) {
+            let type = window.buildtype;
             let mouse = draw.point(e.x, e.y);
             let hexposition = draw.findHex(mouse);
             let center = hexposition.center;
-            let hex = this.hex(hexposition.x, hexposition.y);
+            let hex = draw.hex(hexposition.x,hexposition.y);
 
             let hexcorner = [];
             let nearestCorner = 0;
-            let oldDistance = this.calcDistance(mouse, this.hex_corner(center, 0));
-            hexcorner.push(this.hex_corner(center, 0));
+            let oldDistance = draw.calcDistance(mouse, draw.hex_corner(center, 0));
+            hexcorner.push(draw.hex_corner(center, 0));
             for (let i = 1; i <= 5; i++) {
-                let corner = this.hex_corner(center, i);
+                let corner = draw.hex_corner(center, i);
                 hexcorner.push(corner);
-                let newDistance = this.calcDistance(mouse, corner);
-                if (newDistance < oldDistance) {
+                let newDistance = draw.calcDistance(mouse, corner);
+                if(newDistance < oldDistance){
                     nearestCorner = i;
                     oldDistance = newDistance;
                 }
@@ -51,11 +58,19 @@ export class DrawBoard {
             //Koordinaten des Eckpunktes
             let selCorner = hexcorner[nearestCorner];
             //Nachbarn des Hexagon
-            let neighbors = this.findNeighbors(hex, nearestCorner);
+            let neighbors = draw.findNeighbors(hex, nearestCorner);
 
-        });
+            //alle 3 hexagons
+            neighbors.push(hex);
 
-        this.resize();
+            if(type === BUILDING_TYPES.HOUSE || type === BUILDING_TYPES.CITY){
+                window.socket.addBuilding(type, neighbors[0].q, neighbors[0].r, neighbors[1].q, neighbors[1].r, neighbors[2].q, neighbors[2].r);
+            }
+        }
+        else {
+            window.gameClient.showError("You can't build outside of the map");
+        }
+
     }
 
     resize() {
@@ -66,6 +81,27 @@ export class DrawBoard {
         this.vertDist = this.hexHeight * 3 / 4;
 
         this.background.fillStyle = this.clouds;
+    }
+
+
+    drawBuilding(buildings, assets){
+        for(let b in buildings){
+            let building = buildings[b];
+            let x = 0;
+            let y = 0;
+            for(let i = 0; i < building.coords.length; i++){
+
+                let q = building.coords[i][0];
+                let r = building.coords[i][1];
+                let hex = {q,r};
+                let point = this.hex_to_pixel(hex);
+                x += point.x;
+                y += point.y;
+            }
+            x /= building.coords.length;
+            y /= building.coords.length;
+            this.ctx.drawImage(assets.get(building.type), x - this.hexWidth/8, y - this.hexHeight/8, this.hexWidth/4, this.hexHeight/4);
+        }
     }
 
     //Zeichnet ein einzelnes Hexagon
@@ -109,55 +145,49 @@ export class DrawBoard {
     }
 
     //berechnet Distance zwischen zwei Punkten
-    calcDistance(p1, p2) {
+    calcDistance(p1, p2){
         let xdiff = Math.abs(p1.x - p2.x);
         let ydiff = Math.abs(p1.y - p2.y);
-        let distance = Math.sqrt(Math.pow(xdiff, 2) + Math.pow(ydiff, 2));
+        let distance = Math.sqrt(Math.pow(xdiff,2) + Math.pow(ydiff,2));
         return distance;
     }
 
     //vergleicht Mouseklick mit Hexagons
-    findHex(mouse) {
+    findHex(mouse){
         let hexPosition = this.hexcenters[0];
         let oldDistance = this.calcDistance(mouse, hexPosition.center);
-        for (let i = 1; i < this.hexcenters.length; i++) {
-            let newDistance = this.calcDistance(mouse, this.hexcenters[i].center);
-            if (newDistance < oldDistance) {
-                oldDistance = newDistance;
-                hexPosition = this.hexcenters[i];
-            }
+        for (let i = 1; i < this.hexcenters.length; i++){
+                let newDistance = this.calcDistance(mouse, this.hexcenters[i].center);
+                if(newDistance < oldDistance){
+                    oldDistance = newDistance;
+                    hexPosition = this.hexcenters[i];
+                }
         }
         return hexPosition;
     }
 
     //findet Zwei Nachbarn des Hexagons abhängig vom Eckpunkt
-    findNeighbors(hex, corner) {
+    findNeighbors(hex, corner){
         let nearNeighbors = [];
-        switch (corner) {
-            case 5:
-                nearNeighbors.push(this.hex(NEIGHBOURS.TOP_LEFT[0] + hex.q, NEIGHBOURS.TOP_LEFT[1] + hex.r));
-                nearNeighbors.push(this.hex(NEIGHBOURS.TOP_RIGHT[0] + hex.q, NEIGHBOURS.TOP_RIGHT[1] + hex.r));
+        switch (corner){
+            case 5: nearNeighbors.push(this.hex(NEIGHBOURS.TOP_LEFT[0] + hex.q, NEIGHBOURS.TOP_LEFT[1] + hex.r));
+                    nearNeighbors.push(this.hex(NEIGHBOURS.TOP_RIGHT[0] + hex.q, NEIGHBOURS.TOP_RIGHT[1] + hex.r));
                 break;
-            case 0:
-                nearNeighbors.push(this.hex(NEIGHBOURS.TOP_RIGHT[0] + hex.q, NEIGHBOURS.TOP_RIGHT[1] + hex.r));
-                nearNeighbors.push(this.hex(NEIGHBOURS.RIGHT[0] + hex.q, NEIGHBOURS.RIGHT[1] + hex.r));
-                break;
-            case 1:
-                nearNeighbors.push(this.hex(NEIGHBOURS.RIGHT[0] + hex.q, NEIGHBOURS.RIGHT[1] + hex.r));
-                nearNeighbors.push(this.hex(NEIGHBOURS.BOT_RIGHT[0] + hex.q, NEIGHBOURS.BOT_RIGHT[1] + hex.r));
-                break;
-            case 2:
-                nearNeighbors.push(this.hex(NEIGHBOURS.BOT_RIGHT[0] + hex.q, NEIGHBOURS.BOT_RIGHT[1] + hex.r));
-                nearNeighbors.push(this.hex(NEIGHBOURS.BOT_LEFT[0] + hex.q, NEIGHBOURS.BOT_LEFT[1] + hex.r));
-                break;
-            case 3:
-                nearNeighbors.push(this.hex(NEIGHBOURS.BOT_LEFT[0] + hex.q, NEIGHBOURS.BOT_LEFT[1] + hex.r));
-                nearNeighbors.push(this.hex(NEIGHBOURS.LEFT[0] + hex.q, NEIGHBOURS.LEFT[1] + hex.r));
-                break;
-            case 4:
-                nearNeighbors.push(this.hex(NEIGHBOURS.LEFT[0] + hex.q, NEIGHBOURS.LEFT[1] + hex.r));
-                nearNeighbors.push(this.hex(NEIGHBOURS.TOP_LEFT[0] + hex.q, NEIGHBOURS.TOP_LEFT[1] + hex.r));
-                break;
+            case 0: nearNeighbors.push(this.hex(NEIGHBOURS.TOP_RIGHT[0] + hex.q, NEIGHBOURS.TOP_RIGHT[1] + hex.r));
+                    nearNeighbors.push(this.hex(NEIGHBOURS.RIGHT[0] + hex.q, NEIGHBOURS.RIGHT[1] + hex.r));
+                    break;
+            case 1: nearNeighbors.push(this.hex(NEIGHBOURS.RIGHT[0] + hex.q, NEIGHBOURS.RIGHT[1] + hex.r));
+                    nearNeighbors.push(this.hex(NEIGHBOURS.BOT_RIGHT[0] + hex.q, NEIGHBOURS.BOT_RIGHT[1] + hex.r));
+                    break;
+            case 2: nearNeighbors.push(this.hex(NEIGHBOURS.BOT_RIGHT[0] + hex.q, NEIGHBOURS.BOT_RIGHT[1] + hex.r));
+                    nearNeighbors.push(this.hex(NEIGHBOURS.BOT_LEFT[0] + hex.q, NEIGHBOURS.BOT_LEFT[1] + hex.r));
+                    break;
+            case 3: nearNeighbors.push(this.hex(NEIGHBOURS.BOT_LEFT[0] + hex.q, NEIGHBOURS.BOT_LEFT[1] + hex.r));
+                    nearNeighbors.push(this.hex(NEIGHBOURS.LEFT[0] + hex.q, NEIGHBOURS.LEFT[1] + hex.r));
+                    break;
+            case 4: nearNeighbors.push(this.hex(NEIGHBOURS.LEFT[0] + hex.q, NEIGHBOURS.LEFT[1] + hex.r));
+                    nearNeighbors.push(this.hex(NEIGHBOURS.TOP_LEFT[0] + hex.q, NEIGHBOURS.TOP_LEFT[1] + hex.r));
+                    break;
         }
         console.log("hex");
         console.log(hex);
@@ -224,8 +254,8 @@ export class DrawBoard {
     }
 
     //Cube coordinates
-    cube(x, y, z) {
-        return {x, y, z};
+    cube(x, y, z){
+        return{x,y,z};
     }
 
     //Zeichnet Images auf das jeweilige Hexagon

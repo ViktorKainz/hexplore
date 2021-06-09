@@ -48,6 +48,29 @@
 <h3 id="musictoggle" onclick="toggleMusic()">🔇</h3>
 <audio id="music" src="/audio/Frederic_Lardon_-_04_-_Stay_Calm.mp3" loop></audio>
 <table id="error"></table>
+<div id="buildMenu">
+    <table id="buildOptions">
+        <tr>
+            <td><button id="btHouse" onclick="build('house')"><img src="assets/house.svg" alt="Beautiful House"></button></td>
+          <!--  <td><button id="btStreet" onclick="build('street')"><img src="assets/street.svg" alt="Beautiful Street"></button></td> -->
+            <td><button id="btCity" onclick="build('city')"><img src="assets/city.svg" alt="Beautiful Tower"></button></td>
+            <td><button id="btShip" onclick="build('ship')"><img src="assets/ship.svg" alt="Beautiful Ship"></button></td>
+        </tr>
+       <!-- <tr>
+            <td>-1x Wood</td>
+            <td>-3x Stone</td>
+            <td>-1x Wood</td>
+        </tr>
+        <tr>
+            <td>-1x Grain</td>
+            <td>-2x Grain</td>
+            <td>-2x Sheep</td>
+        </tr>
+        <tr>
+            <td>-2x Sheep</td>
+        </tr>-->
+    </table>
+</div>
 
 <script src="/js/events.js"></script>
 </body>

@@ -13,4 +13,9 @@ form.addEventListener("submit", (e) => {
     localStorage.setItem("name", name);
 })
 
+window.build = function (type){
+    document.getElementById("canvas").addEventListener("click", window.gameClient.draw.clickevent);
+    window.buildtype = type;
+};
+
 document.getElementById("name").value = localStorage.getItem("name");
