@@ -8,3 +8,11 @@ If you want to try it you can play it [here](http://hexplore.herokuapp.com/).
 ## Authors
 - **Viktor Kainz** - [ViktorKainz](https://github.com/ViktorKainz)
 - **Koloman Moser** - [KolomanMoser](https://github.com/KolomanMoser)
+
+## Credits
+Assets:
+- **IDLandGames** - [Hex](https://idlandgames.itch.io/assets-hex)
+- **Kenney** - [Boardgame Pack](https://www.kenney.nl/assets/boardgame-pack)
+
+Music:
+- **Frederic Lardon** - [Stay Calm](https://www.chosic.com/download-audio/?t=25855)
