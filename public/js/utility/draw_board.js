@@ -274,16 +274,16 @@ export class DrawBoard {
                 if (typeof tile != "undefined" && tile != null) {
                     let center = this.hex_to_pixel(this.hex(x, y));
                     if (center.x >= -this.size && center.y >= -this.size && center.x <= this.canvas.width + this.size && center.y <= this.canvas.height + this.size) {
+                        let botLeft = board.getTile(x + NEIGHBOURS.BOT_LEFT[0], y + NEIGHBOURS.BOT_LEFT[1]);
+                        let botRight = board.getTile(x + NEIGHBOURS.BOT_RIGHT[0], y + NEIGHBOURS.BOT_RIGHT[1]);
                         if ((tile.type === TILE_TYPES.GRASS || tile.type === TILE_TYPES.DESERT || tile.type === TILE_TYPES.WATER) &&
-                            (typeof board.getTile(x + NEIGHBOURS.BOT_LEFT[0], y + NEIGHBOURS.BOT_LEFT[1]) == "undefined" ||
-                                typeof board.getTile(x + NEIGHBOURS.BOT_RIGHT[0], y + NEIGHBOURS.BOT_RIGHT[1]) == "undefined")) {
+                            (typeof botLeft == "undefined" || botLeft == null || typeof botRight == "undefined" || botRight == null)) {
                             this.ctx.drawImage(assets.get(tile.type + "_Border"), center.x - (this.hexWidth / 2), center.y - (this.hexHeight / 2), this.hexWidth, this.hexHeight * 1.23);
                         } else {
                             if (typeof Tile.getBackground(tile.type) != "undefined") {
                                 let background = Tile.getBackground(tile.type);
                                 if ((background === TILE_TYPES.GRASS || background === TILE_TYPES.DESERT || background === TILE_TYPES.WATER) &&
-                                    (typeof board.getTile(x + NEIGHBOURS.BOT_LEFT[0], y + NEIGHBOURS.BOT_LEFT[1]) == "undefined" ||
-                                        typeof board.getTile(x + NEIGHBOURS.BOT_RIGHT[0], y + NEIGHBOURS.BOT_RIGHT[1]) == "undefined")) {
+                                    (typeof botLeft == "undefined" || botLeft == null || typeof botRight == "undefined" || botRight == null)) {
                                     this.ctx.drawImage(assets.get(background + "_Border"), center.x - (this.hexWidth / 2), center.y - (this.hexHeight / 2), this.hexWidth, this.hexHeight * 1.23);
                                 } else {
                                     this.ctx.drawImage(assets.get(Tile.getBackground(tile.type)), center.x - (this.hexWidth / 2), center.y - (this.hexHeight / 2), this.hexWidth, this.hexHeight);
