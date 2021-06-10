@@ -110,6 +110,7 @@ export class SocketClient {
         this.socket.on("start", () => {
             document.getElementById("overlay").style.display = "none";
             document.getElementById("canvas").style.display = "block";
+            document.getElementById("buildMenu").style.display = "flex";
             gameClient.input = true;
             this.getBoard();
         });
