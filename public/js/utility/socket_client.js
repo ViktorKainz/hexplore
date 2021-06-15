@@ -111,6 +111,7 @@ export class SocketClient {
             document.getElementById("overlay").style.display = "none";
             document.getElementById("canvas").style.display = "block";
             document.getElementById("buildMenu").style.display = "flex";
+            document.getElementById("resourceMenu").style.display = "flex";
             gameClient.input = true;
             this.getBoard();
         });
@@ -143,6 +144,15 @@ export class SocketClient {
          */
         this.socket.on("next turn", (player) => {
             gameClient.setTurn(player);
+        });
+
+        /**
+         * Handles the "next turn" event.
+         */
+        this.socket.on("new resources", (resources) => {
+            for (const [key, value] of Object.entries(resources[this.socket.user])) {
+                document.getElementById(key).innerText = value;
+            }
         });
     }
 
