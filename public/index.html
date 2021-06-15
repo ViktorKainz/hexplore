@@ -38,7 +38,7 @@
         <table id="player">
 
         </table>
-        <button id="ready" onclick="socket.setReady();">Ready</button>
+        <button id="ready" onclick="socketClient.setReady();">Ready</button>
     </div>
 </div>
 
@@ -48,6 +48,8 @@
 <h3 id="musictoggle" onclick="toggleMusic()">🔇</h3>
 <audio id="music" src="/audio/Frederic_Lardon_-_04_-_Stay_Calm.mp3" loop></audio>
 <table id="error"></table>
+<button id="next" onclick="next()">Finish Round</button>
+<h3 id="current">Waiting for</h3>
 <div id="buildMenu">
     <table id="buildOptions">
         <tr>

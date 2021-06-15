@@ -5,17 +5,25 @@ form.addEventListener("submit", (e) => {
     let name = document.getElementById("name").value;
     let code = document.getElementById("code").value;
     if(clicked === "create") {
-        socket.createRoom();
+        socketClient.createRoom();
     } else if(clicked === "join") {
-        socket.joinRoom(code);
+        socketClient.joinRoom(code);
     }
-    socket.changeName(name);
+    socketClient.changeName(name);
     localStorage.setItem("name", name);
 })
 
 window.build = function (type){
-    document.getElementById("canvas").addEventListener("click", window.gameClient.draw.clickevent);
-    window.buildtype = type;
+    if(gameClient.myTurn) {
+        document.getElementById("canvas").addEventListener("click", window.gameClient.draw.clickevent);
+        window.buildtype = type;
+    } else {
+        gameClient.showError("It isn`t your turn yet!");
+    }
 };
+
+window.next = function () {
+    socketClient.finish();
+}
 
 document.getElementById("name").value = localStorage.getItem("name");

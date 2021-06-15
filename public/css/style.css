@@ -208,3 +208,10 @@ input {
     user-select: none;
 }
 
+#next, #current {
+    position: fixed;
+    right: 10px;
+    bottom: 20vh;
+    display: none;
+}
+

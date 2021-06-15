@@ -15,11 +15,12 @@ export class GameClient {
 
     constructor() {
         this.input = false;
+        this.myTurn = false;
         this.#board = new Board();
         this.assets = new Assets();
         this.assets.addEventListener("loaded", (e) => {
             this.draw = new DrawBoard();
-            socket.getPreview();
+            socketClient.getPreview();
         });
         this.assets.load();
     }
@@ -106,7 +107,7 @@ export class GameClient {
      */
     getTile(x, y) {
         if (typeof this.#board.getTile(x, y) == "undefined") {
-            socket.getTile(x, y);
+            socketClient.getTile(x, y);
             return undefined;
         }
         return this.#board.getTile(x, y);
@@ -201,5 +202,22 @@ export class GameClient {
         setTimeout(() => {
             window.removeError(button);
         },10000);
+    }
+
+    /**
+     * Checks whether it is the player's turn
+     * @param {int} player
+     */
+    setTurn(player) {
+        this.myTurn = player === socketClient.socket.user;
+        if(this.myTurn) {
+            document.getElementById("current").style.display = "none";
+            document.getElementById("next").style.display = "block";
+        } else {
+            document.getElementById("next").style.display = "none";
+            let c = document.getElementById("current");
+            c.style.display = "block";
+            c.innerText = "Waiting for " + this.#player[player];
+        }
     }
 }

@@ -19,7 +19,7 @@ function resize() {
 resize();
 window.onresize = resize;
 
-window.socket = new SocketClient();
+window.socketClient = new SocketClient();
 window.gameClient = new GameClient();
 window.onkeypress = window.gameClient.keyHandler;
 

@@ -15,7 +15,7 @@ export class SocketClient {
             if (localStorage.getItem("user") == null) {
                 localStorage.setItem("user", (Math.floor(Math.random() * Date.now()) + ""));
             }
-            this.socket.user = localStorage.getItem("user");
+            this.socket.user = parseInt(localStorage.getItem("user"));
             this.setUser(this.socket.user);
         });
 
@@ -137,6 +137,13 @@ export class SocketClient {
         this.socket.on("points", (points) => {
             gameClient.setPoints(points);
         });
+
+        /**
+         * Handles the "next turn" event.
+         */
+        this.socket.on("next turn", (player) => {
+            gameClient.setTurn(player);
+        });
     }
 
     /**
@@ -224,5 +231,12 @@ export class SocketClient {
      */
     getPreview() {
         this.socket.emit("get preview");
+    }
+
+    /**
+     * Tells the server that the player finished his turn
+     */
+    finish() {
+        this.socket.emit("finished");
     }
 }

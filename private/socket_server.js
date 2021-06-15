@@ -164,10 +164,10 @@ export class SocketServer {
             });
 
             /**
-             * Handles the "set user" event.
-             * Distributes Resources to the player and starts the next turn.
+             * Handles the "finished" event.
+             * Distributes resources and points to the player and starts the next turn.
              */
-            socket.on("next turn", () => {
+            socket.on("finished", () => {
                 this.#io.to(socket.room).emit("points", this.#getGame(socket).getPoints());
                 this.#io.to(socket.room).emit("new resources", this.#getGame(socket).distributeResources());
                 this.#io.to(socket.room).emit("next turn", this.#getGame(socket).getNextTurn());

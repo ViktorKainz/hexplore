@@ -64,7 +64,7 @@ export class DrawBoard {
             neighbors.push(hex);
 
             if(type === BUILDING_TYPES.HOUSE || type === BUILDING_TYPES.CITY){
-                window.socket.addBuilding(type, neighbors[0].q, neighbors[0].r, neighbors[1].q, neighbors[1].r, neighbors[2].q, neighbors[2].r);
+                window.socketClient.addBuilding(type, neighbors[0].q, neighbors[0].r, neighbors[1].q, neighbors[1].r, neighbors[2].q, neighbors[2].r);
             }
         }
         else {
