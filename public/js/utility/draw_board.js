@@ -32,10 +32,10 @@ export class DrawBoard {
 
     clickevent(e){
         let draw = window.gameClient.draw;
-        draw.canvas.removeEventListener("click", draw.clickevent);
         let data = draw.ctx.getImageData(e.x, e.y,1,1).data;
         // let hex = draw.pixelToHex(draw.point(e.x, e.y));
         if(data[3] !== 0) {
+            draw.canvas.removeEventListener("click", draw.clickevent);
             let type = window.buildtype;
             let mouse = draw.point(e.x, e.y);
             let hexposition = draw.findHex(mouse);

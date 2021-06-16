@@ -48,7 +48,8 @@
 <h3 id="musictoggle" onclick="toggleMusic()">🔇</h3>
 <audio id="music" src="/audio/Frederic_Lardon_-_04_-_Stay_Calm.mp3" loop></audio>
 <table id="error"></table>
-<button id="next" onclick="next()">Finish Round</button>
+<button id="next" onclick="next()">Finish Turn</button>
+<button id="exchange" onclick="showExchangeMenu()">Exchange</button>
 <h3 id="current">Waiting for</h3>
 <div id="buildMenu">
     <table id="buildOptions">
@@ -89,6 +90,48 @@
             <td id="crops">0</td>
         </tr>
     </table>
+</div>
+
+<div id="resourceExchangeMenu">
+    <div>
+        <input id="range" type="range" min="1" max="10" value="1" onchange="changeExchangeAmount(this.value)">
+    </div>
+    <table>
+        <tr>
+            <td>
+                <img id="in_img" src="assets/stone.svg">
+            </td>
+            <td id="arrow">➜</td>
+            <td>
+                <img id="out_img" src="assets/wood.svg">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <select id="in_select" onchange="changeInput(this.value)">
+                    <option value="stone" id="in_stone">Stone</option>
+                    <option value="wood" id="in_wood" disabled>Wood</option>
+                    <option value="wool" id="in_wool">Wool</option>
+                    <option value="crops" id="in_crops">Crops</option>
+                </select>
+            </td>
+            <td></td>
+            <td>
+                <select id="out_select" onchange="changeOutput(this.value)">
+                    <option value="stone" id="out_stone" disabled>Stone</option>
+                    <option value="wood" id="out_wood">Wood</option>
+                    <option value="wool" id="out_wool">Wool</option>
+                    <option value="crops" id="out_crops">Crops</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td><input type="number" id="input" value="4" disabled/></td>
+            <td></td>
+            <td><input type="number" id="output" value="1" onchange="changeExchangeAmount(this.value)"/></td>
+        </tr>
+    </table>
+    <button onclick="exchange()">Exchange</button>
 </div>
 
 <script src="/js/events.js"></script>

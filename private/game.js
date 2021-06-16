@@ -304,13 +304,21 @@ export class Game {
         if (!Game.checkCosts(this.#resources[player], input)) return false;
         let inAmount = 0;
         let outAmount = 0;
+        let inEmpty = 0;
+        let outEmpty = 0;
         for (let value of Object.values(input)) {
-            inAmount += value;
+            inAmount += parseInt(value);
+            if(value == 0) {
+                inEmpty++;
+            }
         }
         for (let value of Object.values(output)) {
-            outAmount += value;
+            outAmount += parseInt(value);
+            if(value == 0) {
+                outEmpty++;
+            }
         }
-        if (inAmount / 4 !== outAmount) return false;
+        if (inEmpty !== 3 && outEmpty !== 3 && inAmount / 4 !== outAmount) return false;
         this.removeResourcesFromPlayer(player, input);
         this.addResourcesToPlayer(player, output);
         return true;
@@ -322,10 +330,10 @@ export class Game {
      * @param {Resources} resources
      */
     removeResourcesFromPlayer(player, resources) {
-        this.#resources[player].wood -= resources.wood;
-        this.#resources[player].wool -= resources.wool;
-        this.#resources[player].crops -= resources.crops;
-        this.#resources[player].stone -= resources.stone;
+        this.#resources[player].wood -= parseInt(resources.wood);
+        this.#resources[player].wool -= parseInt(resources.wool);
+        this.#resources[player].crops -= parseInt(resources.crops);
+        this.#resources[player].stone -= parseInt(resources.stone);
     }
 
     /**
@@ -334,10 +342,10 @@ export class Game {
      * @param {Resources} resources
      */
     addResourcesToPlayer(player, resources) {
-        this.#resources[player].wood += resources.wood;
-        this.#resources[player].wool += resources.wool;
-        this.#resources[player].crops += resources.crops;
-        this.#resources[player].stone += resources.stone;
+        this.#resources[player].wood += parseInt(resources.wood);
+        this.#resources[player].wool += parseInt(resources.wool);
+        this.#resources[player].crops += parseInt(resources.crops);
+        this.#resources[player].stone += parseInt(resources.stone);
     }
 
     /**

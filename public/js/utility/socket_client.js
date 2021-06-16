@@ -112,6 +112,7 @@ export class SocketClient {
             document.getElementById("canvas").style.display = "block";
             document.getElementById("buildMenu").style.display = "flex";
             document.getElementById("resourceMenu").style.display = "flex";
+            document.getElementById("exchange").style.display = "block";
             gameClient.input = true;
             this.getBoard();
         });
@@ -230,7 +231,7 @@ export class SocketClient {
 
     /**
      * Sends the server the id of the user
-     * @param {id} user
+     * @param {int} user
      */
     setUser(user) {
         this.socket.emit("set user", user);
@@ -248,5 +249,14 @@ export class SocketClient {
      */
     finish() {
         this.socket.emit("finished");
+    }
+
+    /**
+     * Sends the server a request to exchange resources
+     * @param {Resources} input
+     * @param {Resources} output
+     */
+    exchange(input, output) {
+        this.socket.emit("exchange resources", input, output);
     }
 }

@@ -23,6 +23,7 @@ export class WorldGenerator {
 
             for (let i in TILE_TYPES) {
                 tiles.push(TILE_TYPES[i]);
+                tiles.push(TILE_TYPES[i]);
             }
 
             board.setTile(x, y, new Tile(tiles[Math.floor(Math.random() * tiles.length)]));
