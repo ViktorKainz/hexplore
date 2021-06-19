@@ -70,6 +70,7 @@ export class SocketServer {
                 if(typeof this.#getRoom(socket.room) != "undefined") {
                     this.#getGame(socket).addPlayer(socket.user, name);
                     this.#io.to(socket.room).emit("new name", this.#getGame(socket).getPlayer());
+                    this.#io.to(socket.room).emit("new color", this.#getGame(socket).getColors());
                 }
             });
 

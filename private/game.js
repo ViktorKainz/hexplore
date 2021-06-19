@@ -4,6 +4,16 @@ import {Building, BUILDING_COSTS, BUILDING_TYPES} from "../public/js/game/buildi
 import {Connection, CONNECTION_COSTS, CONNECTION_TYPES} from "../public/js/game/connection.js";
 import {Resources} from "../public/js/game/resources.js";
 import {TILE_TYPES} from "../public/js/game/tile.js";
+import {hexToCSSFilter} from 'hex-to-css-filter';
+
+const PLAYER_COLORS = [
+    hexToCSSFilter("#0000FF").filter,
+    hexToCSSFilter("#008000").filter,
+    hexToCSSFilter("#FF0000").filter,
+    hexToCSSFilter("#FFFF00").filter,
+    hexToCSSFilter("#8B4513").filter,
+    hexToCSSFilter("#800080").filter
+]
 
 /**
  * Class that handles a running game session
@@ -17,6 +27,7 @@ export class Game {
     #ready = {};
     #resources = {};
     #points = {};
+    #colors = {};
     #round;
     #turn;
     #multiplier;
@@ -171,7 +182,7 @@ export class Game {
         this.#buildings.push(new Building(player, type, x1, y1, x2, y2, x3, y3));
         this.#points[player]++;
         let c = [[x1, y1], [x2, y2], [x3, y3]];
-        for(let i in c) {
+        for (let i in c) {
             WorldGenerator.generateCircle(this.#board, c[i][0], c[i][1], 1);
         }
         return true;
@@ -257,7 +268,7 @@ export class Game {
         r.crops -= costs.crops;
         this.#connections.push(new Connection(player, type, x1, y1, x2, y2));
         let c = [[x1, y1], [x2, y2]];
-        for(let i in c) {
+        for (let i in c) {
             WorldGenerator.generateCircle(this.#board, c[i][0], c[i][1], 1);
         }
         return true;
@@ -308,13 +319,13 @@ export class Game {
         let outEmpty = 0;
         for (let value of Object.values(input)) {
             inAmount += parseInt(value);
-            if(value == 0) {
+            if (value == 0) {
                 inEmpty++;
             }
         }
         for (let value of Object.values(output)) {
             outAmount += parseInt(value);
-            if(value == 0) {
+            if (value == 0) {
                 outEmpty++;
             }
         }
@@ -358,6 +369,8 @@ export class Game {
         this.#ready[id] = false;
         this.#resources[id] = new Resources(0, 0, 0, 0);
         this.#points[id] = 0;
+        let filter = PLAYER_COLORS[Object.keys(this.#player).length - 1]
+        this.#colors[id] = filter.substr(0,filter.length - 1);
     }
 
     /**
@@ -423,8 +436,17 @@ export class Game {
 
     /**
      * Returns the points of all player
+     * @returns {{}}
      */
     getPoints() {
         return this.#points;
+    }
+
+    /**
+     * Returns the colors of all player
+     * @returns {{}}
+     */
+    getColors() {
+        return this.#colors;
     }
 }

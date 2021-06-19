@@ -100,7 +100,9 @@ export class DrawBoard {
             }
             x /= building.coords.length;
             y /= building.coords.length;
+            this.ctx.filter = gameClient.getColors()[building.player];
             this.ctx.drawImage(assets.get(building.type), x - this.hexWidth/8, y - this.hexHeight/8, this.hexWidth/4, this.hexHeight/4);
+            this.ctx.filter = "none";
         }
     }
 

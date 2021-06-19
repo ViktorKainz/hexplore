@@ -49,6 +49,15 @@ export class SocketClient {
         });
 
         /**
+         * Handles the "new color" event.
+         * Sets the player color in the game client and updates the lobby.
+         * @param {{}} colors
+         */
+        this.socket.on("new color", (colors) => {
+            gameClient.setColors(colors);
+        });
+
+        /**
          * Handles the "user disconnected" event.
          * @param {int} id
          */

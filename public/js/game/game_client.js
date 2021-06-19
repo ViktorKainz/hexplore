@@ -12,6 +12,7 @@ export class GameClient {
     #player = {};
     #ready = {};
     #points = {};
+    #colors = {};
 
     constructor() {
         this.input = false;
@@ -157,11 +158,27 @@ export class GameClient {
     }
 
     /**
+     * Sets the player colors
+     * @param {{}} player
+     */
+    setColors(colors) {
+        this.#colors = colors;
+    }
+
+    /**
      * Returns an object with the ids and names of the player
      * @returns {{}} Names of player
      */
     getPlayer() {
         return this.#player;
+    }
+
+    /**
+     * Returns an object with the ids and colors of the player
+     * @returns {{}} Names of player
+     */
+    getColors() {
+        return this.#colors;
     }
 
     /**
