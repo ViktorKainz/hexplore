@@ -129,7 +129,8 @@ export class SocketServer {
                         break;
                     case "blocked": socket.emit("error", "locations is blocked");break;
                     case "resources": socket.emit("error", "not enough resources");break;
-                    case "no neighbours": socket.emit("error", "The building has to be next to a connection!")
+                    case "no neighbours": socket.emit("error", "The building has to be next to a connection!");break;
+                    case "no house": socket.emit("error", "A city must be placed on a house!");
                 }
             });
 

@@ -146,40 +146,56 @@ export class Game {
     addBuilding(player, type, x1, y1, x2, y2, x3, y3) {
         let coords = JSON.stringify([[x1, y1], [x2, y2], [x3, y3]].sort(Board.compareCoords));
         let build = 0;
-        for (let b in this.#buildings) {
-            let c = JSON.stringify(this.#buildings[b].coords);
-            if (c === coords) {
-                return "blocked";
-            }
-            if (this.#buildings[b].player === player) {
-                build++;
-            }
-        }
-        let neighbourConnections = [
-            [[x1, y1], [x2, y2]],
-            [[x1, y1], [x3, y3]],
-            [[x2, y2], [x3, y3]]
-        ];
-        if (build > 1 && !this.hasNeighbour(neighbourConnections, this.#connections, player)) {
-            return "no neighbours";
-        }
-        let r = this.#resources[player];
+        let house = false;
+
         let costs;
-        switch (type) {
-            case BUILDING_TYPES.HOUSE:
-                costs = BUILDING_COSTS.HOUSE;
-                break;
-            case BUILDING_TYPES.CITY:
-                costs = BUILDING_COSTS.CITY;
-                break;
-            default:
-                return false;
+        if(type === BUILDING_TYPES.HOUSE) {
+            for (let b in this.#buildings) {
+                let c = JSON.stringify(this.#buildings[b].coords);
+                if (c === coords) {
+                    return "blocked";
+                }
+                if (this.#buildings[b].player === player) {
+                    build++;
+                }
+            }
+            let neighbourConnections = [
+                [[x1, y1], [x2, y2]],
+                [[x1, y1], [x3, y3]],
+                [[x2, y2], [x3, y3]]
+            ];
+            if (build > 1 && !this.hasNeighbour(neighbourConnections, this.#connections, player)) {
+                return "no neighbours";
+            }
+            costs = BUILDING_COSTS.HOUSE;
+        } else if(type === BUILDING_TYPES.CITY) {
+            for (let b in this.#buildings) {
+                let c = JSON.stringify(this.#buildings[b].coords);
+                if (c === coords && this.#buildings[b].type === BUILDING_TYPES.HOUSE) {
+                    house = this.#buildings[b];
+                }
+            }
+            if(!house) {
+                return "no house";
+            }
+            costs = BUILDING_COSTS.CITY;
+        } else  {
+            return false;
         }
-        if (!Game.checkCosts(r, costs)) return "resources";
-        r.stone -= costs.stone;
-        r.wood -= costs.wood;
-        r.wool -= costs.wool;
-        r.crops -= costs.crops;
+
+        if(!(build < 2 && type === BUILDING_TYPES.HOUSE)) {
+            let r = this.#resources[player];
+            if (!Game.checkCosts(r, costs)) return "resources";
+            r.stone -= costs.stone;
+            r.wood -= costs.wood;
+            r.wool -= costs.wool;
+            r.crops -= costs.crops;
+        }
+
+        if(type === BUILDING_TYPES.CITY) {
+            this.#buildings = this.#buildings.filter(value => value !== house);
+        }
+
         this.#buildings.push(new Building(player, type, x1, y1, x2, y2, x3, y3));
         this.#points[player]++;
         let c = [[x1, y1], [x2, y2], [x3, y3]];
