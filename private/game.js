@@ -31,6 +31,7 @@ export class Game {
     #round;
     #turn;
     #multiplier;
+    #pointstowin = 20;
 
     constructor() {
         this.#board = new Board();
@@ -448,5 +449,29 @@ export class Game {
      */
     getColors() {
         return this.#colors;
+    }
+
+    /**
+     * Returns true if the game has a winner
+     * @returns {boolean}
+     */
+    hasWinner() {
+        for(let i in this.#points) {
+            if(this.#points[i] >= this.#pointstowin) {
+                return true;
+            }
+        }
+    }
+
+    /**
+     * Returns the id of the player that has won
+     * @returns {string}
+     */
+    getWinner() {
+        for(let i in this.#points) {
+            if(this.#points[i] >= this.#pointstowin) {
+                return i;
+            }
+        }
     }
 }

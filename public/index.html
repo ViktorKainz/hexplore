@@ -4,6 +4,7 @@
 <head>
     <title>Hexplore</title>
     <link rel="icon" type="image/png" href="assets/Grass.png">
+    <link rel="stylesheet" href="css/pyro.css">
     <link rel="stylesheet" href="css/style.css"/>
     <script src="/socket.io/socket.io.min.js"></script>
     <script src="/js/main.js" type="module"></script>
@@ -14,7 +15,7 @@
 <canvas id="shadow"></canvas>
 <canvas id="canvas"></canvas>
 
-<div id="overlay">
+<div id="menu">
     <h1 id="title">Hexpl<span id="hex">⬢</span>re</h1>
     <form id="form" action="">
         <table>
@@ -43,95 +44,108 @@
 </div>
 
 <h3 id="room"></h3>
-<table id="points"></table>
-<h3 id="round"></h3>
 <h3 id="musictoggle" onclick="toggleMusic()">🔇</h3>
 <audio id="music" src="/audio/Frederic_Lardon_-_04_-_Stay_Calm.mp3" loop></audio>
 <table id="error"></table>
-<button id="next" onclick="next()">Finish Turn</button>
-<button id="exchange" onclick="showExchangeMenu()">Exchange</button>
-<h3 id="current">Waiting for</h3>
-<div id="buildMenu">
-    <table id="buildOptions">
-        <tr>
-            <td><button id="btHouse" onclick="build('house')"><img src="assets/house.svg" alt="Beautiful House"></button></td>
-          <!--  <td><button id="btStreet" onclick="build('street')"><img src="assets/street.svg" alt="Beautiful Street"></button></td> -->
-            <td><button id="btCity" onclick="build('city')"><img src="assets/city.svg" alt="Beautiful Tower"></button></td>
-            <td><button id="btShip" onclick="build('ship')"><img src="assets/ship.svg" alt="Beautiful Ship"></button></td>
-        </tr>
-       <!-- <tr>
-            <td>-1x Wood</td>
-            <td>-3x Stone</td>
-            <td>-1x Wood</td>
-        </tr>
-        <tr>
-            <td>-1x Grain</td>
-            <td>-2x Grain</td>
-            <td>-2x Sheep</td>
-        </tr>
-        <tr>
-            <td>-2x Sheep</td>
-        </tr>-->
-    </table>
-</div>
 
-<div id="resourceMenu">
-    <table>
-        <tr>
-            <td><img src="assets/stone.svg"/></td>
-            <td><img src="assets/wood.svg"/></td>
-            <td><img src="assets/wool.svg"/></td>
-            <td><img src="assets/crop.svg"/></td>
-        </tr>
-        <tr>
-            <td id="stone">0</td>
-            <td id="wood">0</td>
-            <td id="wool">0</td>
-            <td id="crops">0</td>
-        </tr>
-    </table>
-</div>
-
-<div id="resourceExchangeMenu">
-    <div>
-        <input id="range" type="range" min="1" max="10" value="1" onchange="changeExchangeAmount(this.value)">
+<div id="game">
+    <table id="points"></table>
+    <h3 id="round"></h3>
+    <button id="next" onclick="next()">Finish Turn</button>
+    <button id="exchange" onclick="showExchangeMenu()">Exchange</button>
+    <h3 id="current">Waiting for</h3>
+    <div id="buildMenu">
+        <table id="buildOptions">
+            <tr>
+                <td><button id="btHouse" onclick="build('house')"><img src="assets/house.svg" alt="Beautiful House"></button></td>
+                <!--  <td><button id="btStreet" onclick="build('street')"><img src="assets/street.svg" alt="Beautiful Street"></button></td> -->
+                <td><button id="btCity" onclick="build('city')"><img src="assets/city.svg" alt="Beautiful Tower"></button></td>
+                <td><button id="btShip" onclick="build('ship')"><img src="assets/ship.svg" alt="Beautiful Ship"></button></td>
+            </tr>
+            <!-- <tr>
+                 <td>-1x Wood</td>
+                 <td>-3x Stone</td>
+                 <td>-1x Wood</td>
+             </tr>
+             <tr>
+                 <td>-1x Grain</td>
+                 <td>-2x Grain</td>
+                 <td>-2x Sheep</td>
+             </tr>
+             <tr>
+                 <td>-2x Sheep</td>
+             </tr>-->
+        </table>
     </div>
-    <table>
-        <tr>
-            <td>
-                <img id="in_img" src="assets/stone.svg">
-            </td>
-            <td id="arrow">➜</td>
-            <td>
-                <img id="out_img" src="assets/wood.svg">
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <select id="in_select" onchange="changeInput(this.value)">
-                    <option value="stone" id="in_stone">Stone</option>
-                    <option value="wood" id="in_wood" disabled>Wood</option>
-                    <option value="wool" id="in_wool">Wool</option>
-                    <option value="crops" id="in_crops">Crops</option>
-                </select>
-            </td>
-            <td></td>
-            <td>
-                <select id="out_select" onchange="changeOutput(this.value)">
-                    <option value="stone" id="out_stone" disabled>Stone</option>
-                    <option value="wood" id="out_wood">Wood</option>
-                    <option value="wool" id="out_wool">Wool</option>
-                    <option value="crops" id="out_crops">Crops</option>
-                </select>
-            </td>
-        </tr>
-        <tr>
-            <td><input type="number" id="input" value="4" disabled/></td>
-            <td></td>
-            <td><input type="number" id="output" value="1" onchange="changeExchangeAmount(this.value)"/></td>
-        </tr>
-    </table>
-    <button onclick="exchange()">Exchange</button>
+
+    <div id="resourceMenu">
+        <table>
+            <tr>
+                <td><img src="assets/stone.svg"/></td>
+                <td><img src="assets/wood.svg"/></td>
+                <td><img src="assets/wool.svg"/></td>
+                <td><img src="assets/crop.svg"/></td>
+            </tr>
+            <tr>
+                <td id="stone">0</td>
+                <td id="wood">0</td>
+                <td id="wool">0</td>
+                <td id="crops">0</td>
+            </tr>
+        </table>
+    </div>
+
+    <div id="resourceExchangeMenu">
+        <div>
+            <input id="range" type="range" min="1" max="10" value="1" onchange="changeExchangeAmount(this.value)">
+        </div>
+        <table>
+            <tr>
+                <td>
+                    <img id="in_img" src="assets/stone.svg">
+                </td>
+                <td id="arrow">➜</td>
+                <td>
+                    <img id="out_img" src="assets/wood.svg">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <select id="in_select" onchange="changeInput(this.value)">
+                        <option value="stone" id="in_stone">Stone</option>
+                        <option value="wood" id="in_wood" disabled>Wood</option>
+                        <option value="wool" id="in_wool">Wool</option>
+                        <option value="crops" id="in_crops">Crops</option>
+                    </select>
+                </td>
+                <td></td>
+                <td>
+                    <select id="out_select" onchange="changeOutput(this.value)">
+                        <option value="stone" id="out_stone" disabled>Stone</option>
+                        <option value="wood" id="out_wood">Wood</option>
+                        <option value="wool" id="out_wool">Wool</option>
+                        <option value="crops" id="out_crops">Crops</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td><input type="number" id="input" value="4" disabled/></td>
+                <td></td>
+                <td><input type="number" id="output" value="1" onchange="changeExchangeAmount(this.value)"/></td>
+            </tr>
+        </table>
+        <button onclick="exchange()">Exchange</button>
+    </div>
+</div>
+
+<div class="pyro">
+    <div class="before"></div>
+    <div class="after"></div>
+</div>
+
+<div id="win">
+    <h2 id="winner"></h2>
+    <button onclick="document.location.reload()">New Game</button>
 </div>
 
 <script src="/js/events.js"></script>

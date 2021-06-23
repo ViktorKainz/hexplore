@@ -117,11 +117,8 @@ export class SocketClient {
          * Switches to the game screen and requests the board
          */
         this.socket.on("start", () => {
-            document.getElementById("overlay").style.display = "none";
-            document.getElementById("canvas").style.display = "block";
-            document.getElementById("buildMenu").style.display = "flex";
-            document.getElementById("resourceMenu").style.display = "flex";
-            document.getElementById("exchange").style.display = "block";
+            document.getElementById("menu").style.display = "none";
+            document.getElementById("game").style.display = "block";
             gameClient.input = true;
             this.getBoard();
         });
@@ -163,6 +160,13 @@ export class SocketClient {
             for (const [key, value] of Object.entries(resources[this.socket.user])) {
                 document.getElementById(key).innerText = value;
             }
+        });
+
+        /**
+         * Handles the "winner" event.
+         */
+        this.socket.on("winner", (player) => {
+            gameClient.setWinner(player);
         });
     }
 

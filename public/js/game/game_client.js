@@ -237,4 +237,15 @@ export class GameClient {
             c.innerText = "Waiting for " + this.#player[player];
         }
     }
+
+    /**
+     * Displays the winner of the game
+     * @param {int} player
+     */
+    setWinner(player) {
+        document.getElementById("game").style.display = "none";
+        document.getElementById("win").style.display = "block";
+        document.getElementsByClassName("pyro")[0].style.display = "block";
+        document.getElementById("winner").innerText = "The player " + this.#player[player] + " has won with " + this.#points[player] + " points!";
+    }
 }

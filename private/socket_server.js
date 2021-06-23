@@ -171,8 +171,12 @@ export class SocketServer {
             socket.on("finished", () => {
                 this.#io.to(socket.room).emit("points", this.#getGame(socket).getPoints());
                 this.#io.to(socket.room).emit("new resources", this.#getGame(socket).distributeResources());
-                this.#io.to(socket.room).emit("next turn", this.#getGame(socket).getNextTurn());
-                this.#io.to(socket.room).emit("round", this.#getGame(socket).getRound());
+                if(this.#getGame(socket).hasWinner()) {
+                    this.#io.to(socket.room).emit("winner", this.#getGame(socket).getWinner());
+                } else {
+                    this.#io.to(socket.room).emit("next turn", this.#getGame(socket).getNextTurn());
+                    this.#io.to(socket.room).emit("round", this.#getGame(socket).getRound());
+                }
             });
 
             /**

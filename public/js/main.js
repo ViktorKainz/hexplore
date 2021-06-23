@@ -68,7 +68,7 @@ async function gameLoop() {
     }
     fps++;
     window.gameClient.drawBoard();
-    setTimeout(gameLoop, 10);
+    setTimeout(gameLoop, 16);
 }
 
 gameLoop();

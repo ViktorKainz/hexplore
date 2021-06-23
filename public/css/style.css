@@ -45,7 +45,7 @@ h1 {
     z-index: -1;
 }
 
-#overlay {
+#menu {
     display: block;
     position: fixed;
     top: 10%;
@@ -56,6 +56,10 @@ h1 {
 }
 
 #lobby {
+    display: none;
+}
+
+#game {
     display: none;
 }
 
@@ -154,7 +158,7 @@ input {
     bottom: 0;
     background-color: rgba(255, 255, 255, 0.5);
     text-align: center;
-    display: none;
+    display: flex;
     justify-content: center;
 }
 
@@ -219,7 +223,7 @@ input {
     position: fixed;
     right: 30vw;
     bottom: 20vh;
-    display: none;
+    display: block;
     transform: translate(100%,0);
 }
 
@@ -231,7 +235,7 @@ input {
     bottom: 0;
     background-color: rgba(255, 255, 255, 0.5);
     text-align: center;
-    display: none;
+    display: flex;
     justify-content: center;
 }
 
@@ -290,4 +294,29 @@ input {
 
 input[type='number'] {
     text-align: center;
+}
+
+#win {
+    display: none;
+    width: 40vw;
+    height: 20vh;
+    margin-left: 30vw;
+    margin-top: 40vh;
+    background-color: rgba(255, 255, 255, 0.5);
+    text-align: center;
+}
+
+#winner {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+#win button{
+    position: relative;
+    top: 50%;
+}
+
+.pyro {
+    display: none;
 }
