@@ -225,7 +225,7 @@ export class Game {
             }
         }
         let neighbours = [];
-        switch (JSON.stringify([x1 - x2, y1 - y2])) {
+        switch (JSON.stringify([x2 - x1, y2 - y1])) {
             case JSON.stringify(NEIGHBOURS.BOT_RIGHT):
                 neighbours[0] = [x1 + NEIGHBOURS.RIGHT[0], y1 + NEIGHBOURS.RIGHT[1]];
                 neighbours[1] = [x1 + NEIGHBOURS.BOT_LEFT[0], y1 + NEIGHBOURS.BOT_LEFT[1]];
@@ -251,17 +251,23 @@ export class Game {
                 neighbours[1] = [x1 + NEIGHBOURS.BOT_LEFT[0], y1 + NEIGHBOURS.BOT_LEFT[1]];
                 break;
         }
+        console.log(neighbours);
         let neighbourConnections = [
-            [[x1, y1], neighbours[0]],
-            [[x1, y1], neighbours[1]],
-            [[x2, y2], neighbours[0]],
-            [[x2, y2], neighbours[1]]
+            [[x1, y1], neighbours[0]].sort(Board.compareCoords),
+            [[x1, y1], neighbours[1]].sort(Board.compareCoords),
+            [[x2, y2], neighbours[0]].sort(Board.compareCoords),
+            [[x2, y2], neighbours[1]].sort(Board.compareCoords)
         ];
+        this.#buildings.forEach((b) => {
+            console.log(b.coords);
+        })
         if (!this.hasNeighbour(neighbourConnections, this.#connections, player)) {
+
             let neighbourBuildings = [
-                [[x1, y1], [x2, y2], neighbours[0]],
-                [[x1, y1], [x2, y2], neighbours[1]]
+                [[x1, y1], [x2, y2], neighbours[0]].sort(Board.compareCoords),
+                [[x1, y1], [x2, y2], neighbours[1]].sort(Board.compareCoords)
             ];
+            console.log(neighbourBuildings);
             if (!this.hasNeighbour(neighbourBuildings, this.#buildings, player)) {
                 return "no neighbours";
             }
