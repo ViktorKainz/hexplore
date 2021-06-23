@@ -15,7 +15,7 @@ export const BUILDING_TYPES = {
  * @type {{CITY: Resources, HOUSE: Resources}}
  */
 export const BUILDING_COSTS = {
-    HOUSE: new Resources(0,0,0,0),
+    HOUSE: new Resources(1,1,1,1),
     CITY: new Resources(3,0,0,2)
 }
 

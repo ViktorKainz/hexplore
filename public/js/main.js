@@ -1,6 +1,8 @@
 import {SocketClient} from "./utility/socket_client.js";
 import {GameClient} from "./game/game_client.js";
 import {Resources} from "./game/resources.js";
+import {BUILDING_COSTS} from "./game/building.js";
+import {CONNECTION_COSTS} from "./game/connection.js";
 
 function resize() {
     let c = document.getElementById("canvas");
@@ -68,7 +70,7 @@ async function gameLoop() {
     }
     fps++;
     window.gameClient.drawBoard();
-    setTimeout(gameLoop, 16);
+    setTimeout(gameLoop, 32);
 }
 
 gameLoop();
@@ -167,3 +169,22 @@ window.exchange = function () {
 
     document.getElementById("resourceExchangeMenu").style.display = "none";
 }
+
+function loadCosts(element, costs) {
+    if(costs.stone > 0) {
+        element.innerHTML += "Stone: " + costs.stone + "</br>";
+    }
+    if(costs.wood > 0) {
+        element.innerHTML += "Wood: " + costs.wood + "</br>";
+    }
+    if(costs.wool > 0) {
+        element.innerHTML += "Wool: " + costs.wool + "</br>";
+    }
+    if(costs.crops > 0) {
+        element.innerHTML += "Crops: " + costs.crops + "</br>";
+    }
+}
+
+loadCosts(document.getElementById("houseCosts"), BUILDING_COSTS.HOUSE);
+loadCosts(document.getElementById("streetCosts"), CONNECTION_COSTS.STREET);
+loadCosts(document.getElementById("cityCosts"), BUILDING_COSTS.CITY);

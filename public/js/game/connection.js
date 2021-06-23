@@ -15,7 +15,7 @@ export const CONNECTION_TYPES = {
  * @type {{SHIP: Resources, STREET: Resources}}
  */
 export const CONNECTION_COSTS = {
-    STREET: new Resources(0,0,0,0),
+    STREET: new Resources(1,1,0,0),
     SHIP: new Resources(0,1,1,0)
 }
 
