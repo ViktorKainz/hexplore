@@ -483,6 +483,7 @@ export class Game {
                 return true;
             }
         }
+        return false;
     }
 
     /**

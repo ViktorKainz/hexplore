@@ -154,7 +154,7 @@ export class SocketClient {
         });
 
         /**
-         * Handles the "next turn" event.
+         * Handles the "new resources" event.
          */
         this.socket.on("new resources", (resources) => {
             for (const [key, value] of Object.entries(resources[this.socket.user])) {
