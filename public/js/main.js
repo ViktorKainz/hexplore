@@ -1,4 +1,4 @@
-import {SocketClient} from "./utility/socket_client.js";
+import {SocketClient} from "./game/socket_client.js";
 import {GameClient} from "./game/game_client.js";
 import {Resources} from "./game/resources.js";
 import {BUILDING_COSTS} from "./game/building.js";

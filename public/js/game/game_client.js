@@ -1,6 +1,6 @@
 import {Board} from "./board.js";
-import {DrawBoard} from "../utility/draw_board.js";
-import {Assets} from "../utility/assets.js";
+import {DrawBoard} from "../gui/draw_board.js";
+import {Assets} from "../gui/assets.js";
 
 /**
  * Class that handles the display of the game and the input of the player
