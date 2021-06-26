@@ -27,3 +27,12 @@ window.next = function () {
 }
 
 document.getElementById("name").value = localStorage.getItem("name");
+
+document.getElementById("chatForm").addEventListener("submit", function (e) {
+   e.preventDefault();
+   let input = document.getElementById("chatInput");
+   if(input.value) {
+       socketClient.sendMessage(input.value);
+       input.value = "";
+   }
+});

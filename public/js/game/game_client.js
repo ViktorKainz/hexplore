@@ -77,6 +77,7 @@ export class GameClient {
             let tr = document.createElement("tr");
             let name = document.createElement("td");
             name.innerText = this.#player[p];
+            name.style.color = this.#colors[p];
             tr.appendChild(name);
             let points = document.createElement("td");
             points.innerText = this.#points[p];
@@ -279,5 +280,24 @@ export class GameClient {
      */
     getPlayerAssets(player) {
         return this.#playerAssets[player];
+    }
+
+    /**
+     * Displays the message and the player name
+     * @param{int} player
+     * @param {string} message
+     */
+    displayMessage(player, message) {
+        let user = document.createElement("td");
+        user.innerText = this.#player[player];
+        user.style.color = this.#colors[player];
+        let text = document.createElement("td");
+        text.innerText = message;
+        let tr = document.createElement("tr");
+        tr.appendChild(user);
+        tr.appendChild(text);
+        let table =  document.getElementById("messages");
+        table.append(tr);
+        table.scrollTop = table.scrollHeight;
     }
 }

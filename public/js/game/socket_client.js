@@ -62,7 +62,7 @@ export class SocketClient {
          * @param {int} id
          */
         this.socket.on("user disconnected", (id) => {
-            console.log(gameClient.getPlayer()[id]);
+            gameClient.displayMessage(id, "has disconnected!");
         })
 
         /**
@@ -168,6 +168,13 @@ export class SocketClient {
         this.socket.on("winner", (player) => {
             gameClient.setWinner(player);
         });
+
+        /**
+         * Handles the "send message" event.
+         */
+        this.socket.on("new message", (player, message) => {
+            gameClient.displayMessage(player, message);
+        });
     }
 
     /**
@@ -271,5 +278,13 @@ export class SocketClient {
      */
     exchange(input, output) {
         this.socket.emit("exchange resources", input, output);
+    }
+
+    /**
+     * Sends a message to the other player
+     * @param {string} message
+     */
+    sendMessage(message) {
+        this.socket.emit("send message", message);
     }
 }

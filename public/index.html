@@ -126,6 +126,15 @@
         </table>
         <button onclick="exchange()">Exchange</button>
     </div>
+
+    <div id="chat">
+        <table id="messages">
+
+        </table>
+        <form id="chatForm" action="">
+            <input id="chatInput" type="text" onfocusin="gameClient.input = false;" onfocusout="gameClient.input = true;">
+        </form>
+    </div>
 </div>
 
 <div class="pyro">

@@ -320,3 +320,25 @@ input[type='number'] {
 .pyro {
     display: none;
 }
+
+#chat {
+    position: fixed;
+    height: 40vh;
+    width: 20vw;
+    right: 0;
+    bottom: 26vh;
+}
+
+#messages {
+    height: 39vh;
+    display: block;
+    overflow-y: scroll;
+}
+
+#messages tr td:nth-child(2) {
+    word-break: break-all;
+}
+
+#messages::-webkit-scrollbar {
+    display: none;
+}
