@@ -126,10 +126,9 @@ export class DrawBoard {
 
     /**
      * draws a building on a corner point
-     * @param {Building} buildings
-     * @param {Assets} assets
+     * @param {*[]} buildings
      */
-    drawBuilding(buildings, assets) {
+    drawBuilding(buildings) {
         for (let b in buildings) {
             let building = buildings[b];
             let x = 0;
@@ -321,19 +320,24 @@ export class DrawBoard {
     }
 
     /**
-     * draws the tiles and the background on the canvas
-     * @param {Board} board
-     * @param {Assets} assets
+     * draws the background
      */
-    drawAssets(board, assets) {
-        this.hexcenters = [];
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.shadow.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    drawBackground() {
         this.background.translate(this.xOffset * 0.5 + this.xWindOffset, this.yOffset * 0.5 + this.yWindOffset);
         this.background.fillRect(-this.xOffset * 0.5 - this.xWindOffset, -this.yOffset * 0.5 - this.yWindOffset, this.canvas.width, this.canvas.height);
         this.background.translate(-this.xOffset * 0.5 - this.xWindOffset, -this.yOffset * 0.5 - this.yWindOffset);
         this.xWindOffset += this.xWind;
         this.yWindOffset += this.yWind;
+    }
+
+    /**
+     * draws the tiles on the canvas
+     * @param {Board} board
+     */
+    drawTiles(board) {
+        this.hexcenters = [];
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.shadow.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         for (let y = board.getMinY(); y <= board.getMaxY(); y++) {
             for (let x = board.getMinX(); x <= board.getMaxX(); x++) {
@@ -345,18 +349,18 @@ export class DrawBoard {
                         let botRight = board.getTile(x + NEIGHBOURS.BOT_RIGHT[0], y + NEIGHBOURS.BOT_RIGHT[1]);
                         if ((tile.type === TILE_TYPES.GRASS || tile.type === TILE_TYPES.DESERT || tile.type === TILE_TYPES.WATER) &&
                             (typeof botLeft == "undefined" || botLeft == null || typeof botRight == "undefined" || botRight == null)) {
-                            this.ctx.drawImage(assets.get(tile.type + "_Border"), center.x - (this.hexWidth / 2), center.y - (this.hexHeight / 2), this.hexWidth, this.hexHeight * 1.23);
+                            this.ctx.drawImage(gameClient.assets.get(tile.type + "_Border"), center.x - (this.hexWidth / 2), center.y - (this.hexHeight / 2), this.hexWidth, this.hexHeight * 1.23);
                         } else {
                             if (typeof Tile.getBackground(tile.type) != "undefined") {
                                 let background = Tile.getBackground(tile.type);
                                 if ((background === TILE_TYPES.GRASS || background === TILE_TYPES.DESERT || background === TILE_TYPES.WATER) &&
                                     (typeof botLeft == "undefined" || botLeft == null || typeof botRight == "undefined" || botRight == null)) {
-                                    this.ctx.drawImage(assets.get(background + "_Border"), center.x - (this.hexWidth / 2), center.y - (this.hexHeight / 2), this.hexWidth, this.hexHeight * 1.23);
+                                    this.ctx.drawImage(gameClient.assets.get(background + "_Border"), center.x - (this.hexWidth / 2), center.y - (this.hexHeight / 2), this.hexWidth, this.hexHeight * 1.23);
                                 } else {
-                                    this.ctx.drawImage(assets.get(Tile.getBackground(tile.type)), center.x - (this.hexWidth / 2), center.y - (this.hexHeight / 2), this.hexWidth, this.hexHeight);
+                                    this.ctx.drawImage(gameClient.assets.get(Tile.getBackground(tile.type)), center.x - (this.hexWidth / 2), center.y - (this.hexHeight / 2), this.hexWidth, this.hexHeight);
                                 }
                             }
-                            this.ctx.drawImage(assets.get(tile.type), center.x - (this.hexWidth / 2), center.y - (this.hexHeight / 2), this.hexWidth, this.hexHeight);
+                            this.ctx.drawImage(gameClient.assets.get(tile.type), center.x - (this.hexWidth / 2), center.y - (this.hexHeight / 2), this.hexWidth, this.hexHeight);
                         }
 
                         this.hexcenters.push(new HexPosition(center, x, y));
@@ -365,7 +369,7 @@ export class DrawBoard {
                     }
                     let shadow = this.hexToPixel(new Hex(x + NEIGHBOURS.BOT_RIGHT[0] * 2, y + NEIGHBOURS.BOT_RIGHT[1] * 2));
                     if (shadow.x >= -this.size && shadow.y >= -this.size && shadow.x <= this.canvas.width + this.size && shadow.y <= this.canvas.height + this.size) {
-                        this.shadow.drawImage(assets.get("shadow"), shadow.x, shadow.y - (this.hexHeight / 2), this.hexWidth + 2, this.hexHeight + 2);
+                        this.shadow.drawImage(gameClient.assets.get("shadow"), shadow.x, shadow.y - (this.hexHeight / 2), this.hexWidth + 2, this.hexHeight + 2);
                     }
                 }
             }

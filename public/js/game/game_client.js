@@ -32,9 +32,10 @@ export class GameClient {
      * Draws the board on the canvas
      */
     drawBoard() {
-        this.draw.drawAssets(this.#board, this.assets);
+        this.draw.drawBackground();
+        this.draw.drawTiles(this.#board);
         this.draw.drawConnection(this.#connections);
-        this.draw.drawBuilding(this.#buildings, this.assets);
+        this.draw.drawBuilding(this.#buildings);
     }
 
     /**
