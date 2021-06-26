@@ -40,17 +40,17 @@ export class DrawBoard {
      * adds a building or a connection depending on the selected button
      * @param {event} e
      */
-    clickevent(e){
+    clickevent(e) {
         let draw = window.gameClient.draw;
-        let data = draw.ctx.getImageData(e.x, e.y,1,1).data;
+        let data = draw.ctx.getImageData(e.x, e.y, 1, 1).data;
 
-        if(data[3] !== 0) {
+        if (data[3] !== 0) {
             draw.canvas.removeEventListener("click", draw.clickevent);
             let type = window.buildtype;
             let mouse = new Point(e.x, e.y);
             let hexposition = draw.findHex(mouse);
             let center = hexposition.center;
-            let hex = new Hex(hexposition.x,hexposition.y);
+            let hex = new Hex(hexposition.x, hexposition.y);
             let hexcorner = [];
             let nearestCorner = 0;
             let distances = [];
@@ -66,7 +66,7 @@ export class DrawBoard {
                 hexcorner.push(corner);
                 newDistance = draw.calcDistance(mouse, corner);
                 distances.push({newDistance, currentCorner});
-                if(newDistance < oldDistance){
+                if (newDistance < oldDistance) {
                     nearestCorner = currentCorner;
                     oldDistance = newDistance;
                 }
@@ -74,12 +74,12 @@ export class DrawBoard {
 
             let neighbors = draw.findNeighbors(hex, nearestCorner);
 
-            if(type === CONNECTION_TYPES.STREET) {
+            if (type === CONNECTION_TYPES.STREET) {
                 let distance1 = distances[0].currentCorner !== nearestCorner ? distances[0].newDistance : distances[1].newDistance;
                 let distance2;
                 let secNearCorner = distances[0].currentCorner !== nearestCorner ? distances[0].currentCorner : distances[1].currentCorner;
 
-                for(let distance in distances) {
+                for (let distance in distances) {
                     if (distances[distance].currentCorner !== nearestCorner) {
                         distance2 = distances[distance].newDistance;
                         if (distance1 > distance2) {
@@ -92,22 +92,20 @@ export class DrawBoard {
 
                 let streetHex;
 
-                for(let j = 0; j < otherNeighbors.length; j++){
-                    for(let l = 0; l < neighbors.length; l++){
-                        if(otherNeighbors[j].q === neighbors[l].q && otherNeighbors[j].r === neighbors[l].r){
+                for (let j = 0; j < otherNeighbors.length; j++) {
+                    for (let l = 0; l < neighbors.length; l++) {
+                        if (otherNeighbors[j].q === neighbors[l].q && otherNeighbors[j].r === neighbors[l].r) {
                             streetHex = neighbors[l];
                         }
                     }
                 }
                 window.socketClient.addConnection(type, hex.q, hex.r, streetHex.q, streetHex.r);
-            }
-            else if(type === BUILDING_TYPES.HOUSE || type === BUILDING_TYPES.CITY){
+            } else if (type === BUILDING_TYPES.HOUSE || type === BUILDING_TYPES.CITY) {
                 neighbors.push(hex);
                 window.socketClient.addBuilding(type, neighbors[0].q, neighbors[0].r, neighbors[1].q, neighbors[1].r, neighbors[2].q, neighbors[2].r);
             }
 
-        }
-        else {
+        } else {
             window.gameClient.showError("You can't build outside of the map");
         }
 
@@ -131,24 +129,22 @@ export class DrawBoard {
      * @param {Building} buildings
      * @param {Assets} assets
      */
-    drawBuilding(buildings, assets){
-        for(let b in buildings){
+    drawBuilding(buildings, assets) {
+        for (let b in buildings) {
             let building = buildings[b];
             let x = 0;
             let y = 0;
-            for(let i = 0; i < building.coords.length; i++){
+            for (let i = 0; i < building.coords.length; i++) {
                 let q = building.coords[i][0];
                 let r = building.coords[i][1];
-                let hex = {q,r};
+                let hex = {q, r};
                 let point = this.hexToPixel(hex);
                 x += point.x;
                 y += point.y;
             }
             x /= building.coords.length;
             y /= building.coords.length;
-            this.ctx.filter = gameClient.getColors()[building.player];
-            this.ctx.drawImage(assets.get(building.type), x - this.hexWidth/8, y - this.hexHeight/8, this.hexWidth/4, this.hexHeight/4);
-            this.ctx.filter = "none";
+            this.ctx.drawImage(gameClient.getPlayerAssets(building.player)[building.type], x - this.hexWidth / 8, y - this.hexHeight / 8, this.hexWidth / 4, this.hexHeight / 4);
         }
     }
 
@@ -156,28 +152,26 @@ export class DrawBoard {
      * draws a connection between two corner points
      * @param {Connection[]} connections
      */
-    drawConnection(connections){
-         for(let c in connections){
-             let connection = connections[c];
-             let hexCorner = [];
-             for(let i = 0; i < connection.coords.length; i++){
-                 let q = connection.coords[i][0];
-                 let r = connection.coords[i][1];
-                 let hex = {q,r};
-                 let center = this.hexToPixel(hex);
-                 for (let i = 0; i <= 5; i++) {
-                     let corner = this.hex_corner(center, i);
-                     hexCorner.push(corner);
-                 }
-             }
-             let duplicates = this.checkDuplicates(hexCorner);
+    drawConnection(connections) {
+        for (let c in connections) {
+            let connection = connections[c];
+            let hexCorner = [];
+            for (let i = 0; i < connection.coords.length; i++) {
+                let q = connection.coords[i][0];
+                let r = connection.coords[i][1];
+                let hex = {q, r};
+                let center = this.hexToPixel(hex);
+                for (let i = 0; i <= 5; i++) {
+                    let corner = this.hex_corner(center, i);
+                    hexCorner.push(corner);
+                }
+            }
+            let duplicates = this.checkDuplicates(hexCorner);
 
-             this.ctx.filter = gameClient.getColors()[connection.player];
-             this.ctx.lineWidth = 5;
-             this.drawLine(duplicates.pop(), duplicates.pop());
-             this.ctx.lineWidth = 1;
-             this.ctx.filter = "none";
-         }
+            this.ctx.lineWidth = 5;
+            this.drawLine(duplicates.pop(), duplicates.pop(), gameClient.getColors()[connection.player]);
+            this.ctx.lineWidth = 1;
+        }
     }
 
     /**
@@ -196,12 +190,13 @@ export class DrawBoard {
      * draws a line between two points
      * @param {Point} start
      * @param {Point} end
+     * @param {string} [color="#000000"]
      */
-    drawLine(start, end) {
+    drawLine(start, end, color = "#000000") {
         this.ctx.beginPath();
         this.ctx.moveTo(start.x, start.y);
         this.ctx.lineTo(end.x, end.y);
-        this.ctx.strokeStyle = '#000000';
+        this.ctx.strokeStyle = color;
         this.ctx.stroke();
         this.ctx.closePath();
     }
@@ -246,10 +241,10 @@ export class DrawBoard {
      * @param {Point} p2
      * @returns {number}
      */
-    calcDistance(p1, p2){
+    calcDistance(p1, p2) {
         let xdiff = Math.abs(p1.x - p2.x);
         let ydiff = Math.abs(p1.y - p2.y);
-        let distance = Math.sqrt(Math.pow(xdiff,2) + Math.pow(ydiff,2));
+        let distance = Math.sqrt(Math.pow(xdiff, 2) + Math.pow(ydiff, 2));
         return distance;
     }
 
@@ -258,12 +253,12 @@ export class DrawBoard {
      * @param {Point} mouse
      * @returns {Point}
      */
-    findHex(mouse){
+    findHex(mouse) {
         let hexPosition = this.hexcenters[0];
         let oldDistance = this.calcDistance(mouse, hexPosition.center);
-        for (let i = 1; i < this.hexcenters.length; i++){
+        for (let i = 1; i < this.hexcenters.length; i++) {
             let newDistance = this.calcDistance(mouse, this.hexcenters[i].center);
-            if(newDistance < oldDistance){
+            if (newDistance < oldDistance) {
                 oldDistance = newDistance;
                 hexPosition = this.hexcenters[i];
             }
@@ -277,25 +272,31 @@ export class DrawBoard {
      * @param {number} corner
      * @returns {Hex[]}
      */
-    findNeighbors(hex, corner){
+    findNeighbors(hex, corner) {
         let nearNeighbors = [];
-        switch (corner){
-            case 5: nearNeighbors.push(new Hex(NEIGHBOURS.TOP_LEFT[0] + hex.q, NEIGHBOURS.TOP_LEFT[1] + hex.r));
+        switch (corner) {
+            case 5:
+                nearNeighbors.push(new Hex(NEIGHBOURS.TOP_LEFT[0] + hex.q, NEIGHBOURS.TOP_LEFT[1] + hex.r));
                 nearNeighbors.push(new Hex(NEIGHBOURS.TOP_RIGHT[0] + hex.q, NEIGHBOURS.TOP_RIGHT[1] + hex.r));
                 break;
-            case 0: nearNeighbors.push(new Hex(NEIGHBOURS.TOP_RIGHT[0] + hex.q, NEIGHBOURS.TOP_RIGHT[1] + hex.r));
+            case 0:
+                nearNeighbors.push(new Hex(NEIGHBOURS.TOP_RIGHT[0] + hex.q, NEIGHBOURS.TOP_RIGHT[1] + hex.r));
                 nearNeighbors.push(new Hex(NEIGHBOURS.RIGHT[0] + hex.q, NEIGHBOURS.RIGHT[1] + hex.r));
                 break;
-            case 1: nearNeighbors.push(new Hex(NEIGHBOURS.RIGHT[0] + hex.q, NEIGHBOURS.RIGHT[1] + hex.r));
+            case 1:
+                nearNeighbors.push(new Hex(NEIGHBOURS.RIGHT[0] + hex.q, NEIGHBOURS.RIGHT[1] + hex.r));
                 nearNeighbors.push(new Hex(NEIGHBOURS.BOT_RIGHT[0] + hex.q, NEIGHBOURS.BOT_RIGHT[1] + hex.r));
                 break;
-            case 2: nearNeighbors.push(new Hex(NEIGHBOURS.BOT_RIGHT[0] + hex.q, NEIGHBOURS.BOT_RIGHT[1] + hex.r));
+            case 2:
+                nearNeighbors.push(new Hex(NEIGHBOURS.BOT_RIGHT[0] + hex.q, NEIGHBOURS.BOT_RIGHT[1] + hex.r));
                 nearNeighbors.push(new Hex(NEIGHBOURS.BOT_LEFT[0] + hex.q, NEIGHBOURS.BOT_LEFT[1] + hex.r));
                 break;
-            case 3: nearNeighbors.push(new Hex(NEIGHBOURS.BOT_LEFT[0] + hex.q, NEIGHBOURS.BOT_LEFT[1] + hex.r));
+            case 3:
+                nearNeighbors.push(new Hex(NEIGHBOURS.BOT_LEFT[0] + hex.q, NEIGHBOURS.BOT_LEFT[1] + hex.r));
                 nearNeighbors.push(new Hex(NEIGHBOURS.LEFT[0] + hex.q, NEIGHBOURS.LEFT[1] + hex.r));
                 break;
-            case 4: nearNeighbors.push(new Hex(NEIGHBOURS.LEFT[0] + hex.q, NEIGHBOURS.LEFT[1] + hex.r));
+            case 4:
+                nearNeighbors.push(new Hex(NEIGHBOURS.LEFT[0] + hex.q, NEIGHBOURS.LEFT[1] + hex.r));
                 nearNeighbors.push(new Hex(NEIGHBOURS.TOP_LEFT[0] + hex.q, NEIGHBOURS.TOP_LEFT[1] + hex.r));
                 break;
         }
@@ -307,11 +308,11 @@ export class DrawBoard {
      * @param {Point[]} arr
      * @returns {Point[]}
      */
-    checkDuplicates(arr){
+    checkDuplicates(arr) {
         let duplicates = [];
-        for (let i = 0; i < arr.length;i++){
-            for (let x = 0; x < arr.length; x++){
-                if(Math.round(arr[i].x * 100) / 100 === Math.round(arr[x].x * 100) / 100 && Math.round(arr[i].y * 100) / 100 === Math.round(arr[x].y * 100) / 100 && i != x){
+        for (let i = 0; i < arr.length; i++) {
+            for (let x = 0; x < arr.length; x++) {
+                if (Math.round(arr[i].x * 100) / 100 === Math.round(arr[x].x * 100) / 100 && Math.round(arr[i].y * 100) / 100 === Math.round(arr[x].y * 100) / 100 && i != x) {
                     duplicates.push(arr[i]);
                 }
             }
@@ -328,11 +329,11 @@ export class DrawBoard {
         this.hexcenters = [];
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.shadow.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.background.translate(this.xOffset*0.5+this.xWindOffset, this.yOffset*0.5+this.yWindOffset);
-        this.background.fillRect(-this.xOffset*0.5-this.xWindOffset, -this.yOffset*0.5-this.yWindOffset, this.canvas.width, this.canvas.height);
-        this.background.translate(-this.xOffset*0.5-this.xWindOffset, -this.yOffset*0.5-this.yWindOffset);
-        this.xWindOffset+=this.xWind;
-        this.yWindOffset+=this.yWind;
+        this.background.translate(this.xOffset * 0.5 + this.xWindOffset, this.yOffset * 0.5 + this.yWindOffset);
+        this.background.fillRect(-this.xOffset * 0.5 - this.xWindOffset, -this.yOffset * 0.5 - this.yWindOffset, this.canvas.width, this.canvas.height);
+        this.background.translate(-this.xOffset * 0.5 - this.xWindOffset, -this.yOffset * 0.5 - this.yWindOffset);
+        this.xWindOffset += this.xWind;
+        this.yWindOffset += this.yWind;
 
         for (let y = board.getMinY(); y <= board.getMaxY(); y++) {
             for (let x = board.getMinX(); x <= board.getMaxX(); x++) {
@@ -345,15 +346,13 @@ export class DrawBoard {
                         if ((tile.type === TILE_TYPES.GRASS || tile.type === TILE_TYPES.DESERT || tile.type === TILE_TYPES.WATER) &&
                             (typeof botLeft == "undefined" || botLeft == null || typeof botRight == "undefined" || botRight == null)) {
                             this.ctx.drawImage(assets.get(tile.type + "_Border"), center.x - (this.hexWidth / 2), center.y - (this.hexHeight / 2), this.hexWidth, this.hexHeight * 1.23);
-                        }
-                        else {
+                        } else {
                             if (typeof Tile.getBackground(tile.type) != "undefined") {
                                 let background = Tile.getBackground(tile.type);
                                 if ((background === TILE_TYPES.GRASS || background === TILE_TYPES.DESERT || background === TILE_TYPES.WATER) &&
                                     (typeof botLeft == "undefined" || botLeft == null || typeof botRight == "undefined" || botRight == null)) {
                                     this.ctx.drawImage(assets.get(background + "_Border"), center.x - (this.hexWidth / 2), center.y - (this.hexHeight / 2), this.hexWidth, this.hexHeight * 1.23);
-                                }
-                                else {
+                                } else {
                                     this.ctx.drawImage(assets.get(Tile.getBackground(tile.type)), center.x - (this.hexWidth / 2), center.y - (this.hexHeight / 2), this.hexWidth, this.hexHeight);
                                 }
                             }
@@ -364,7 +363,7 @@ export class DrawBoard {
                         this.drawHex(center);
                         //this.drawHexCoordinates(center, new Hex(x, y));
                     }
-                    let shadow = this.hexToPixel(new Hex(x + NEIGHBOURS.BOT_RIGHT[0]*2, y + NEIGHBOURS.BOT_RIGHT[1]*2));
+                    let shadow = this.hexToPixel(new Hex(x + NEIGHBOURS.BOT_RIGHT[0] * 2, y + NEIGHBOURS.BOT_RIGHT[1] * 2));
                     if (shadow.x >= -this.size && shadow.y >= -this.size && shadow.x <= this.canvas.width + this.size && shadow.y <= this.canvas.height + this.size) {
                         this.shadow.drawImage(assets.get("shadow"), shadow.x, shadow.y - (this.hexHeight / 2), this.hexWidth + 2, this.hexHeight + 2);
                     }

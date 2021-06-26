@@ -1,6 +1,7 @@
 import {Board} from "./board.js";
 import {DrawBoard} from "../gui/draw_board.js";
 import {Assets} from "../gui/assets.js";
+import {BUILDING_TYPES} from "./building.js";
 
 /**
  * Class that handles the display of the game and the input of the player
@@ -13,6 +14,7 @@ export class GameClient {
     #ready = {};
     #points = {};
     #colors = {};
+    #playerAssets = {};
 
     constructor() {
         this.input = false;
@@ -55,7 +57,7 @@ export class GameClient {
         td.style.textAlign = "center";
         tr.appendChild(td);
         table.appendChild(tr);
-        for(let p in this.#player) {
+        for (let p in this.#player) {
             let tr = document.createElement("tr");
             let name = document.createElement("td");
             name.innerText = this.#player[p];
@@ -71,7 +73,7 @@ export class GameClient {
     updatePoints() {
         let table = document.getElementById("points");
         table.innerHTML = "";
-        for(let p in this.#points) {
+        for (let p in this.#points) {
             let tr = document.createElement("tr");
             let name = document.createElement("td");
             name.innerText = this.#player[p];
@@ -88,15 +90,25 @@ export class GameClient {
      * @param {KeyboardEvent} e
      */
     keyHandler(e) {
-        if(window.gameClient.input) {
+        if (window.gameClient.input) {
             let draw = window.gameClient.draw;
             switch (e.key) {
-                case "w": draw.yOffset+=5; break;
-                case "s": draw.yOffset-=5; break;
-                case "a": draw.xOffset+=5; break;
-                case "d": draw.xOffset-=5; break;
-                case "c": draw.yOffset=0;
-                    draw.xOffset=0; break;
+                case "w":
+                    draw.yOffset += 5;
+                    break;
+                case "s":
+                    draw.yOffset -= 5;
+                    break;
+                case "a":
+                    draw.xOffset += 5;
+                    break;
+                case "d":
+                    draw.xOffset -= 5;
+                    break;
+                case "c":
+                    draw.yOffset = 0;
+                    draw.xOffset = 0;
+                    break;
             }
         }
     }
@@ -156,14 +168,24 @@ export class GameClient {
      */
     setPlayer(player) {
         this.#player = player;
+
     }
 
     /**
      * Sets the player colors
-     * @param {{}} player
+     * @param {{}} colors
      */
-    setColors(colors) {
+    async setColors(colors) {
         this.#colors = colors;
+        for (let i in colors) {
+            if (typeof this.#playerAssets[i] == "undefined") {
+                let assets = [];
+                assets[BUILDING_TYPES.HOUSE] = await this.assets.loadSVGcolored("house", colors[i]);
+                assets[BUILDING_TYPES.CITY] = await this.assets.loadSVGcolored("city", colors[i]);
+                this.#playerAssets[i] = assets;
+
+            }
+        }
     }
 
     /**
@@ -219,7 +241,7 @@ export class GameClient {
         table.append(spacer);
         setTimeout(() => {
             window.removeError(button);
-        },10000);
+        }, 10000);
     }
 
     /**
@@ -228,7 +250,7 @@ export class GameClient {
      */
     setTurn(player) {
         this.myTurn = player === socketClient.socket.user;
-        if(this.myTurn) {
+        if (this.myTurn) {
             document.getElementById("current").style.display = "none";
             document.getElementById("next").style.display = "block";
         } else {
@@ -248,5 +270,14 @@ export class GameClient {
         document.getElementById("win").style.display = "block";
         document.getElementsByClassName("pyro")[0].style.display = "block";
         document.getElementById("winner").innerText = "The player " + this.#player[player] + " has won with " + this.#points[player] + " points!";
+    }
+
+    /**
+     * Returns the assets of the specified player
+     * @param {int} player
+     * @returns {*}
+     */
+    getPlayerAssets(player) {
+        return this.#playerAssets[player];
     }
 }

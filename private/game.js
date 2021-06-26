@@ -4,15 +4,14 @@ import {Building, BUILDING_COSTS, BUILDING_TYPES} from "../public/js/game/buildi
 import {Connection, CONNECTION_COSTS, CONNECTION_TYPES} from "../public/js/game/connection.js";
 import {Resources} from "../public/js/game/resources.js";
 import {TILE_TYPES} from "../public/js/game/tile.js";
-import {hexToCSSFilter} from 'hex-to-css-filter';
 
 const PLAYER_COLORS = [
-    hexToCSSFilter("#0000FF").filter,
-    hexToCSSFilter("#008000").filter,
-    hexToCSSFilter("#FF0000").filter,
-    hexToCSSFilter("#FFFF00").filter,
-    hexToCSSFilter("#8B4513").filter,
-    hexToCSSFilter("#800080").filter
+    "#0000FF",
+    "#008000",
+    "#FF0000",
+    "#FFFF00",
+    "#8B4513",
+    "#800080"
 ]
 
 /**
@@ -149,7 +148,7 @@ export class Game {
         let house = false;
 
         let costs;
-        if(type === BUILDING_TYPES.HOUSE) {
+        if (type === BUILDING_TYPES.HOUSE) {
             for (let b in this.#buildings) {
                 let c = JSON.stringify(this.#buildings[b].coords);
                 if (c === coords) {
@@ -168,22 +167,22 @@ export class Game {
                 return "no neighbours";
             }
             costs = BUILDING_COSTS.HOUSE;
-        } else if(type === BUILDING_TYPES.CITY) {
+        } else if (type === BUILDING_TYPES.CITY) {
             for (let b in this.#buildings) {
                 let c = JSON.stringify(this.#buildings[b].coords);
                 if (c === coords && this.#buildings[b].type === BUILDING_TYPES.HOUSE) {
                     house = this.#buildings[b];
                 }
             }
-            if(!house) {
+            if (!house) {
                 return "no house";
             }
             costs = BUILDING_COSTS.CITY;
-        } else  {
+        } else {
             return false;
         }
 
-        if(!(build < 2 && type === BUILDING_TYPES.HOUSE)) {
+        if (!(build < 2 && type === BUILDING_TYPES.HOUSE)) {
             let r = this.#resources[player];
             if (!Game.checkCosts(r, costs)) return "resources";
             r.stone -= costs.stone;
@@ -192,7 +191,7 @@ export class Game {
             r.crops -= costs.crops;
         }
 
-        if(type === BUILDING_TYPES.CITY) {
+        if (type === BUILDING_TYPES.CITY) {
             this.#buildings = this.#buildings.filter(value => value !== house);
         }
 
@@ -251,23 +250,17 @@ export class Game {
                 neighbours[1] = [x1 + NEIGHBOURS.BOT_LEFT[0], y1 + NEIGHBOURS.BOT_LEFT[1]];
                 break;
         }
-        console.log(neighbours);
         let neighbourConnections = [
             [[x1, y1], neighbours[0]].sort(Board.compareCoords),
             [[x1, y1], neighbours[1]].sort(Board.compareCoords),
             [[x2, y2], neighbours[0]].sort(Board.compareCoords),
             [[x2, y2], neighbours[1]].sort(Board.compareCoords)
         ];
-        this.#buildings.forEach((b) => {
-            console.log(b.coords);
-        })
         if (!this.hasNeighbour(neighbourConnections, this.#connections, player)) {
-
             let neighbourBuildings = [
                 [[x1, y1], [x2, y2], neighbours[0]].sort(Board.compareCoords),
                 [[x1, y1], [x2, y2], neighbours[1]].sort(Board.compareCoords)
             ];
-            console.log(neighbourBuildings);
             if (!this.hasNeighbour(neighbourBuildings, this.#buildings, player)) {
                 return "no neighbours";
             }
@@ -392,8 +385,7 @@ export class Game {
         this.#ready[id] = false;
         this.#resources[id] = new Resources(0, 0, 0, 0);
         this.#points[id] = 0;
-        let filter = PLAYER_COLORS[Object.keys(this.#player).length - 1]
-        this.#colors[id] = filter.substr(0,filter.length - 1);
+        this.#colors[id] = PLAYER_COLORS[Object.keys(this.#player).length - 1];
     }
 
     /**
@@ -478,8 +470,8 @@ export class Game {
      * @returns {boolean}
      */
     hasWinner() {
-        for(let i in this.#points) {
-            if(this.#points[i] >= this.#pointstowin) {
+        for (let i in this.#points) {
+            if (this.#points[i] >= this.#pointstowin) {
                 return true;
             }
         }
@@ -491,8 +483,8 @@ export class Game {
      * @returns {string}
      */
     getWinner() {
-        for(let i in this.#points) {
-            if(this.#points[i] >= this.#pointstowin) {
+        for (let i in this.#points) {
+            if (this.#points[i] >= this.#pointstowin) {
                 return i;
             }
         }
