@@ -27,6 +27,7 @@ export class SocketClient {
         this.socket.on("joined room", (room) => {
             document.getElementById("room").innerText = room;
             document.getElementById("form").style.display = "none";
+            document.getElementById("invitation").innerHTML = "Invitation: <a href='" + location.href + "?" + room + "'>" + location.href + "?" + room + "</a>";
             document.getElementById("lobby").style.display = "block";
         });
 

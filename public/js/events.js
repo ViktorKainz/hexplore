@@ -36,3 +36,6 @@ document.getElementById("chatForm").addEventListener("submit", function (e) {
        input.value = "";
    }
 });
+
+document.getElementById("code").value = location.search.substr(1,location.search.length-1);
+history.replaceState(null, "", window.location.pathname);

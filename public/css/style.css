@@ -342,3 +342,7 @@ input[type='number'] {
 #messages::-webkit-scrollbar {
     display: none;
 }
+
+#invitation {
+    text-align: center;
+}
