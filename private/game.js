@@ -16,6 +16,7 @@ const PLAYER_COLORS = [
 
 /**
  * Class that handles a running game session
+ * @author Viktor Kainz
  */
 export class Game {
 

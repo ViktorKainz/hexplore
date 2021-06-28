@@ -6,6 +6,7 @@ const folder = "assets/";
 
 /**
  * Class that handles the loading of assets
+ * @author Viktor Kainz
  */
 export class Assets extends EventTarget {
     #to_load;

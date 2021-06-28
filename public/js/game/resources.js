@@ -1,5 +1,6 @@
 /**
  * Class that stores the resources of a player
+ * @author Viktor Kainz
  */
 export class Resources {
 

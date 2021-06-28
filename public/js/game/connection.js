@@ -21,6 +21,7 @@ export const CONNECTION_COSTS = {
 
 /**
  * Class that stores the type and the coordinates of a Connection
+ * @author Viktor Kainz
  */
 export class Connection {
 

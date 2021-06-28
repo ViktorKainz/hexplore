@@ -21,6 +21,7 @@ export const BUILDING_COSTS = {
 
 /**
  * Class that stores the type and the coordinates of a Building
+ * @author Viktor Kainz
  */
 export class Building {
 

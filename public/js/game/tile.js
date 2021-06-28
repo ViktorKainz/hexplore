@@ -13,6 +13,7 @@ export const TILE_TYPES = {
 
 /**
  * Class that stores the type of a tile
+ * @author Viktor Kainz
  */
 export class Tile {
 

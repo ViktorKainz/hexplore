@@ -2,7 +2,8 @@ import {Tile, TILE_TYPES} from "../public/js/game/tile.js";
 import {NEIGHBOURS} from "../public/js/game/board.js";
 
 /**
- * Class that generates the tiles for the board
+ * Class that generates the tiles for the
+ * @author Viktor Kainz
  */
 export class WorldGenerator {
 

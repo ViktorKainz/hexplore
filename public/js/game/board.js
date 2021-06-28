@@ -24,6 +24,7 @@ export const NEIGHBOURS = {
 
 /**
  * Class that stores the locations of every tile
+ * @author Viktor Kainz
  */
 export class Board {
 
