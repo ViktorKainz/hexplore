@@ -1,5 +1,6 @@
 /**
  * Class that handles the communication with the server
+ * @author Viktor Kainz
  */
 
 export class SocketClient {

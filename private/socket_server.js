@@ -5,6 +5,7 @@ import {WorldGenerator} from "./world_genertator.js";
 
 /**
  * Class that handles the communication with the clients
+ * @author Viktor Kainz
  */
 export class SocketServer {
 

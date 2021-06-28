@@ -5,6 +5,7 @@ import {BUILDING_TYPES} from "./building.js";
 
 /**
  * Class that handles the display of the game and the input of the player
+ * @author Viktor Kainz
  */
 export class GameClient {
     #board;
