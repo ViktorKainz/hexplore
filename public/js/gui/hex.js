@@ -1,5 +1,6 @@
 /**
  * Class that safes hexcoordinates
+ * @author Koloman Moser
  */
 export class Hex{
     constructor(q, r) {

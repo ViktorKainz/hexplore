@@ -1,3 +1,5 @@
+
+
 let form = document.getElementById("form");
 
 form.addEventListener("submit", (e) => {
@@ -15,7 +17,7 @@ form.addEventListener("submit", (e) => {
 
 window.build = function (type){
     if(gameClient.myTurn) {
-        document.getElementById("canvas").addEventListener("click", window.gameClient.draw.clickevent);
+        document.getElementById("canvas").addEventListener("click", window.canvasInteractions.clickevent);
         window.buildtype = type;
     } else {
         gameClient.showError("It isn`t your turn yet!");

@@ -3,6 +3,7 @@ import {GameClient} from "./game/game_client.js";
 import {Resources} from "./game/resources.js";
 import {BUILDING_COSTS} from "./game/building.js";
 import {CONNECTION_COSTS} from "./game/connection.js";
+import {CanvasInteractions} from "./gui/canvas_interactions.js";
 
 function resize() {
     let c = document.getElementById("canvas");
@@ -25,6 +26,7 @@ window.onresize = resize;
 window.socketClient = new SocketClient();
 window.gameClient = new GameClient();
 window.onkeypress = window.gameClient.keyHandler;
+window.canvasInteractions = CanvasInteractions;
 
 window.createButton = function () {
     window.clicked = 'create';
