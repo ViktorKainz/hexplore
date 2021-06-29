@@ -326,7 +326,8 @@ input[type='number'] {
     height: 40vh;
     width: 20vw;
     right: 0;
-    bottom: 26vh;
+    bottom: 27.5vh;
+    background-color: rgba(255, 255, 255, 0.5);
 }
 
 #messages {
